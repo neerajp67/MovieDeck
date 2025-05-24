@@ -1,6 +1,7 @@
 export const environment = {
-  production: false, // Or true, depending on your test build needs
+  production: false,
   testing: true,
   apiUrl: 'https://api.themoviedb.org/3',
-  apiKey: '%%TMDB_API_KEY_PLACEHOLDER%%' // Our placeholder
+  imageBaseUrl: 'https://image.tmdb.org/t/p/',
+  apiKey: '%%TMDB_API_KEY_PLACEHOLDER%%'
 };
