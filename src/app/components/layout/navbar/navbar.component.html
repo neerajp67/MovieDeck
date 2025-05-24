@@ -1,0 +1,33 @@
+<mat-toolbar color="primary" class="app-navbar">
+
+  <a class="app-name-container" routerLink="/">
+    <img src="assets/logo/product_logo.png" alt="MovieDeck Logo" class="app-logo">
+    <span class="app-name-text">{{ appName }}</span>
+  </a>
+
+  <span class="navbar-spacer"></span>
+
+  <div class="desktop-links">
+    <a *ngFor="let link of navLinks"
+       mat-button
+       [routerLink]="link.path"
+       routerLinkActive="active-link">
+      {{ link.label }}
+    </a>
+  </div>
+
+  <div class="mobile-menu">
+    <button mat-icon-button [matMenuTriggerFor]="mobileMenu" aria-label="Toggle mobile menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #mobileMenu="matMenu" class="mobile-menu-items">
+      <a *ngFor="let link of navLinks"
+         mat-menu-item
+         [routerLink]="link.path"
+         (click)="$event.stopPropagation()" 
+         routerLinkActive="active-link-mobile"> 
+        {{ link.label }}
+      </a>
+    </mat-menu>
+  </div>
+</mat-toolbar>
