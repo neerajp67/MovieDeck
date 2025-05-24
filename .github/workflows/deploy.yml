@@ -3,11 +3,11 @@ name: Deploy MovieDeck to GitHub Pages
 on:
   push:
     branches:
-      - test     # Trigger when `test` branch is pushed
-      - prod     # Trigger when `prod` branch is pushed
+      - test
+      - prod
 
 permissions:
-  contents: write # Allows the action to write to the repository, e.g., push to gh-pages
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -19,7 +19,7 @@ jobs:
       - name: Use Node.js LTS
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Or your Angular project's compatible Node version
+          node-version: '20'
           cache: 'npm'
 
       - name: Install Dependencies 🔧
@@ -27,7 +27,7 @@ jobs:
 
       - name: Inject API Key 🔑
         env:
-          TMDB_API_KEY_SECRET: ${{ secrets.TMDB_API_KEY }} # Ensure you have this secret in GitHub Repo Settings
+          TMDB_API_KEY_SECRET: ${{ secrets.TMDB_API_KEY }}
         run: |
           echo "Injecting API Key into environment files..."
           # For production environment file
@@ -40,38 +40,30 @@ jobs:
             sed -i "s|%%TMDB_API_KEY_PLACEHOLDER%%|${TMDB_API_KEY_SECRET}|g" src/environments/environment.test.ts
             echo "API Key injected into environment.test.ts"
           fi
-          # Note: If using the same API key for both test and prod, one injection covers both files
-          # if they both use the same placeholder. If keys were different, you'd need separate secrets
-          # and conditional injection logic here or ensure the correct file is targeted by the build step.
-          # For simplicity, we're assuming the same secret is injected into both placeholders.
 
       - name: Build Testing App 🧪
-        if: github.ref == 'refs/heads/test' # Condition for test branch
-        run: npm run build:testing # Uses --configuration testing, outputs to dist/testing-app, base-href /MovieDeck/testing/
+        if: github.ref == 'refs/heads/test'
+        run: npm run build:testing
 
       - name: Build Production App 🚀
-        if: github.ref == 'refs/heads/prod'  # Condition for prod branch
-        run: npm run build:prod    # Uses --configuration production, outputs to dist/prod-app, base-href /MovieDeck/
+        if: github.ref == 'refs/heads/prod'
+        run: npm run build:prod 
 
       - name: Deploy Testing to gh-pages/testing/ 🧪
-        if: github.ref == 'refs/heads/test' # Condition for test branch
+        if: github.ref == 'refs/heads/test'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist/testing-app # Output from your testing build
-          destination_dir: ./testing      # Deploys to the 'testing' subfolder on the gh-pages branch
+          publish_dir: ./dist/testing-app/browser
+          destination_dir: ./testing
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
-          # By default, this action will create and push to the 'gh-pages' branch.
-          # It will manage the './testing' directory on that branch.
 
       - name: Deploy Production to gh-pages root 🚀
-        if: github.ref == 'refs/heads/prod'  # Condition for prod branch
+        if: github.ref == 'refs/heads/prod'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist/prod-app  # Output from your production build
-          # destination_dir: .  # Default is root, so this line is optional
+          publish_dir: ./dist/prod-app/browser
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
-          # This will deploy to the root of the 'gh-pages' branch.
