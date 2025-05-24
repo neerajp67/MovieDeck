@@ -1,0 +1,53 @@
+:host {
+  display: block;
+}
+
+.app-navbar {
+  display: flex;
+  align-items: center;
+}
+
+.app-name-container {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.app-logo {
+  height: 32px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.app-name-text {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.navbar-spacer {
+  flex: 1 1 auto;
+}
+
+.desktop-links {
+  display: none;
+}
+
+.mobile-menu {
+  display: block;
+}
+
+.active-link, .active-link-mobile {
+  font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  .desktop-links {
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-menu {
+    display: none;
+  }
+}
