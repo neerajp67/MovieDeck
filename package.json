@@ -6,7 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:prod": "ng build --configuration production --base-href /MovieDeck/ --output-path dist/prod-app",
+    "build:testing": "ng build --configuration testing --base-href /MovieDeck/testing/ --output-path dist/testing-app",
+    "deploy:gh": "ngh --dir dist/prod-app" 
   },
   "private": true,
   "dependencies": {
