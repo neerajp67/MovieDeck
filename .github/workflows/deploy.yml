@@ -6,6 +6,9 @@ on:
       - test     # Trigger when `test` branch is pushed
       - prod     # Trigger when `prod` branch is pushed
 
+permissions:
+  contents: write # Allows the action to write to the repository, e.g., push to gh-pages
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
