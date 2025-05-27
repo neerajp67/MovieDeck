@@ -1,0 +1,135 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: block;
+  padding: 20px 0;
+}
+
+.trailers-section {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.trailers-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  mat-button-toggle-group {
+    margin-left: 16px;
+    border-radius: 20px;
+
+    .mat-mdc-button-toggle {
+      font-size: 0.85rem;
+      padding: 0 16px;
+      line-height: 30px;
+
+      &.mat-mdc-button-toggle-checked {
+        background-color: #31c48d;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.loading-indicator, .error-message, .no-trailers {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 180px;
+}
+
+.error-message {
+  color: #f44336;
+}
+
+.horizontal-scroll-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding-bottom: 16px;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #333;
+  }
+}
+
+.scrollable-content {
+  display: inline-flex;
+  gap: 16px;
+}
+
+.trailer-item-card {
+  display: inline-flex;
+  flex-direction: column;
+  width: 280px;
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.trailer-thumbnail-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #222;
+
+  .trailer-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 60px;
+    width: 60px;
+    height: 60px;
+    color: rgba(255, 255, 255, 0.9);
+    pointer-events: none;
+    transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
+  }
+
+  &:hover .play-icon {
+    color: #fff;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+.trailer-info {
+  padding: 12px;
+
+  .trailer-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+  }
+}
