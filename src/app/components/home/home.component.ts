@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { TrendingComponent } from '../trending/trending.component';
-import { HeroComponent } from '../hero/hero.component';
+import { HeroComponent } from './hero/hero.component';
+import { TrendingComponent } from './trending/trending.component';
+
 
 @Component({
   selector: 'app-home',
