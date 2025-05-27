@@ -1,1 +1,48 @@
-<p>list works!</p>
+<div class="list-container">
+    <div class="list-controls-bar">
+        <mat-button-toggle-group [value]="selectedMediaType" (change)="selectMediaType($event.value)"
+            aria-label="Select media type">
+            <mat-button-toggle value="movie">Movies</mat-button-toggle>
+            <mat-button-toggle value="tv">TV Shows</mat-button-toggle>
+        </mat-button-toggle-group>
+        <div class="filters-placeholder"></div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-indicator">
+        <mat-spinner diameter="50"></mat-spinner>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+        <p>{{ errorMessage }}</p>
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && mediaItems.length === 0" class="no-items">
+        <p>No {{ selectedMediaType === 'movie' ? 'movies' : 'TV shows' }} found.</p>
+    </div>
+
+    <div class="media-grid" *ngIf="!isLoading && mediaItems.length > 0">
+        <mat-card *ngFor="let item of mediaItems" class="media-card">
+            <img mat-card-image [src]="movieService.getFullImageUrl(item.poster_path, 'w300')" [alt]="item.title" মহারাজ
+                (error)="item.poster_path = null">
+            <mat-card-content>
+                <mat-card-title>{{ item?.title || item?.name }}</mat-card-title>
+                <mat-card-subtitle *ngIf="item.release_date">
+                    {{ item.release_date | date:'MMM dd' }}
+                </mat-card-subtitle>
+                <p class="media-rating" *ngIf="item.vote_average">
+                    Rating: {{ item.vote_average | number:'1.1-1' }}/10
+                </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+ <div class="pagination-controls" *ngIf="!isLoading && totalPages > 1">
+    <button mat-icon-button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" aria-label="Previous page">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <span>Page {{ currentPage }} of {{ totalPages }} ({{ totalResults }} results)</span>
+    <button mat-icon-button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" aria-label="Next page">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+</div>

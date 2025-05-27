@@ -1,6 +1,7 @@
 export interface Movie {
   id: number;
   title: string;
+  name: string;
   overview: string;
   poster_path: string | null;
   backdrop_path: string | null;
@@ -26,4 +27,22 @@ export interface TmdbResponse<T = Movie> {
   results: T[];
   total_pages: number;
   total_results: number;
+}
+
+export interface Video {
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  key: string; // YouTube key
+  site: string;
+  size: number;
+  type: string;
+  official: boolean;
+  published_at: string;
+  id: string;
+}
+
+export interface VideoResponse {
+  id: number;
+  results: Video[];
 }

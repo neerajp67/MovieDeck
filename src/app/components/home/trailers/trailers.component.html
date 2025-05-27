@@ -1,0 +1,40 @@
+<section class="trailers-section">
+  <div class="trailers-header">
+    <h2>Latest Trailers</h2>
+    <mat-button-toggle-group [value]="selectedCategory" (change)="selectCategory($event.value)"
+      aria-label="Select trailer category">
+      <mat-button-toggle value="movie">Movies</mat-button-toggle>
+      <mat-button-toggle value="tv">TV Shows</mat-button-toggle>
+      <mat-button-toggle value="upcomming">Upcomming</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-indicator">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="error-message">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage && trailers.length === 0" class="no-trailers">
+    <p>No trailers found for this selection.</p>
+  </div>
+
+  <div class="horizontal-scroll-container" *ngIf="!isLoading && trailers.length > 0">
+    <div class="scrollable-content">
+      <div *ngFor="let trailer of trailers" class="trailer-item-card">
+        <div class="trailer-thumbnail-container" (click)="openTrailer(trailer.trailerKey)">
+          <img [src]="getYouTubeThumbnail(trailer.trailerKey)" [alt]="trailer.title + ' trailer thumbnail'"
+            class="trailer-thumbnail">
+          <mat-icon class="play-icon">play_circle_filled</mat-icon>
+        </div>
+        <div class="trailer-info">
+          <h3 class="trailer-title">{{ trailer.title }}</h3>
+          <p *ngIf="trailer.releaseDate" class="trailer-release-date"> {{ trailer.releaseDate | date:'MMM d, y' }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

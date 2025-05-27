@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { Movie, TmdbResponse } from '../../models/tmdb.model';
 import { Subject, takeUntil } from 'rxjs';
-import { TmdbApiService } from '../../services/api/tmdb-api.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +7,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
+import { Movie, TmdbResponse } from '../../../models/tmdb.model';
+import { TmdbApiService } from '../../../services/api/tmdb-api.service';
 
 @Component({
   selector: 'app-trending',
