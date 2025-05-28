@@ -21,7 +21,7 @@
     </div>
 
     <div class="media-grid" *ngIf="!isLoading && mediaItems.length > 0">
-        <mat-card *ngFor="let item of mediaItems" class="media-card">
+        <mat-card *ngFor="let item of mediaItems" class="media-card" (click)="navigateToDetails(item.id)">
             <img mat-card-image [src]="movieService.getFullImageUrl(item.poster_path, 'w300')" [alt]="item.title" মহারাজ
                 (error)="item.poster_path = null">
             <mat-card-content>

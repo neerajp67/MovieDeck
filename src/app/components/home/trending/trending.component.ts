@@ -9,6 +9,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { Movie, TmdbResponse } from '../../../models/tmdb.model';
 import { TmdbApiService } from '../../../services/api/tmdb-api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-trending',
@@ -32,7 +33,9 @@ export class TrendingComponent {
 
   private destroy$ = new Subject<void>();
 
-  constructor(public movieService: TmdbApiService) { }
+  constructor(public movieService: TmdbApiService,
+     private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.loadTrendingMovies();
@@ -53,6 +56,14 @@ export class TrendingComponent {
           this.isLoading = false;
         }
       });
+  }
+
+  navigateToDetails(item: number) {
+    if (item) {
+      this.router.navigate(['/', 'movie', item]);
+    } else {
+      console.error('Cannot navigate to detail: item or item.id is missing', item);
+    }
   }
 
   ngOnDestroy(): void {

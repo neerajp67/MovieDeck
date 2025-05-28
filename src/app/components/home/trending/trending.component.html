@@ -21,7 +21,7 @@
 
   <div class="horizontal-scroll-container" *ngIf="!isLoading && trendingMovies.length > 0">
     <div class="scrollable-content">
-      <mat-card *ngFor="let movie of trendingMovies" class="movie-card-item">
+      <mat-card *ngFor="let movie of trendingMovies" class="movie-card-item"  (click)="navigateToDetails(movie.id)">
         <img mat-card-image [src]="movieService.getFullImageUrl(movie.poster_path, 'w300')" [alt]="movie.title" (error)="movie.poster_path=null">
         <mat-card-content class="movie-card-content">
           <mat-card-title>{{ movie.title }}</mat-card-title>

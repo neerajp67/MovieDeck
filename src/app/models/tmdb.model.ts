@@ -46,3 +46,44 @@ export interface VideoResponse {
   id: number;
   results: Video[];
 }
+
+export interface TvShow extends Movie {
+  name: string;
+  first_air_date: string;
+  original_name?: string;
+  origin_country?: string[];
+  episode_run_time?: number[];
+  genres?: { id: number, name: string }[];
+  homepage?: string | null;
+  in_production?: boolean;
+  languages?: string[];
+  last_air_date?: string;
+  networks?: { id: number, logo_path: string | null, name: string, origin_country: string }[];
+  number_of_episodes?: number;
+  number_of_seasons?: number;
+  status?: string;
+  tagline?: string | null;
+  type?: string;
+}
+
+export interface CastMember {
+  id: number;
+  name: string;
+  character: string;
+  profile_path: string | null;
+  order: number;
+}
+
+export interface CrewMember {
+  id: number;
+  name: string;
+  job: string;
+  department: string;
+  profile_path: string | null;
+}
+
+export interface CreditsResponse {
+  id: number;
+  cast: CastMember[];
+  crew: CrewMember[];
+}
