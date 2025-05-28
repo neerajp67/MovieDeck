@@ -1,1 +1,93 @@
-<p>detail works!</p>
+<div class="detail-page-wrapper" 
+    >
+  
+  <div class="backdrop-overlay"></div>
+
+  <div *ngIf="isLoading" class="loading-indicator">
+    <mat-spinner diameter="60"></mat-spinner>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="error-message">
+    <p>{{ errorMessage }}</p>
+    <button mat-stroked-button routerLink="/home">Go Home</button>
+  </div>
+
+  <div *ngIf="mediaItem && !isLoading" class="detail-content-container">
+    <div class="poster-column">
+      <img [src]="movieService.getFullImageUrl(mediaItem.poster_path, 'w500')" 
+           [alt]="mediaItem.title || mediaItem.name" 
+           class="detail-poster"
+           (error)="mediaItem.poster_path = null">
+      </div>
+
+    <div class="info-column">
+      <h1 class="title">
+        {{ mediaItem.title || mediaItem.name }}
+        <span class="release-year" *ngIf="mediaItem.release_date || mediaItem.release_date">
+          ({{ getYear(mediaItem.release_date || mediaItem.release_date) }})
+        </span>
+      </h1>
+
+      <div class="metadata-line">
+        <span *ngIf="mediaType === 'movie' && mediaItem.release_date" class="release-date">
+          {{ mediaItem.release_date | date:'MM/dd/yyyy' }} ({{ mediaItem.original_language.toUpperCase() }})
+        </span>
+        <span *ngIf="mediaType === 'tv' && mediaItem.release_date" class="release-date">
+          {{ mediaItem.release_date | date:'MM/dd/yyyy' }} ({{ mediaItem.original_language.toUpperCase() }})
+        </span>
+        <span *ngIf="mediaItem.genres && mediaItem.genres.length > 0" class="genres">
+          <mat-chip-set aria-label="Genres">
+            <mat-chip *ngFor="let genre of mediaItem.genres.slice(0, 3)" class="genre-chip" disabled>
+              {{ genre.name }}
+            </mat-chip>
+          </mat-chip-set>
+        </span>
+        <span *ngIf="mediaItem.runtime" class="runtime">{{ mediaItem.runtime }} min</span>
+      </div>
+
+      <div class="actions-and-score">
+        <div class="user-score" *ngIf="mediaItem.vote_average">
+          <span class="score-value">{{ mediaItem.vote_average * 10 | number:'1.0-0' }}%</span>
+          <span class="score-label">User Score</span>
+          </div>
+        <div class="action-buttons">
+          <button mat-icon-button aria-label="Add to list"matTooltip="Add to list (placeholder)">
+            <mat-icon>list</mat-icon>
+          </button>
+          <button mat-icon-button aria-label="Favorite" matTooltip="Favorite (placeholder)">
+            <mat-icon>favorite_border</mat-icon>
+          </button>
+          <button mat-icon-button aria-label="Bookmark" matTooltip="Bookmark (placeholder)">
+            <mat-icon>bookmark_border</mat-icon>
+          </button>
+          <button *ngIf="mainTrailer" mat-flat-button class="play-trailer-button" (click)="openTrailerModal()">
+            <mat-icon>play_arrow</mat-icon> Play Trailer
+          </button>
+        </div>
+      </div>
+      
+      <p class="tagline" *ngIf="mediaItem.tagline">{{ mediaItem.tagline }}</p>
+
+      <div class="overview-section" *ngIf="mediaItem.overview">
+        <h3>Overview</h3>
+        <p>{{ mediaItem.overview }}</p>
+      </div>
+
+      <div class="crew-section" *ngIf="credits">
+        <div class="crew-list" *ngIf="getDirectors().length > 0">
+          <h4>Directed by</h4>
+          <span *ngFor="let director of getDirectors(); let last = last">
+            {{ director.name }}{{ !last ? ', ' : '' }}
+          </span>
+        </div>
+        <div class="crew-list" *ngIf="getCreators().length > 0">
+          <h4>{{ mediaType === 'movie' ? 'Written by' : 'Created by' }}</h4>
+          <span *ngFor="let creator of getCreators(); let last = last">
+            {{ creator.name }}{{ !last ? ', ' : '' }}
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

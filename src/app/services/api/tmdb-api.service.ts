@@ -1,9 +1,9 @@
 // src/app/services/tmdb.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Movie, TmdbResponse, VideoResponse } from '../../models/tmdb.model';
+import { CreditsResponse, Movie, TmdbResponse, TvShow, VideoResponse } from '../../models/tmdb.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -88,4 +88,25 @@ export class TmdbApiService {
     const url = `${this.apiUrl}/movie/upcoming`;
     return this.http.get<TmdbResponse<Movie>>(url, { params });
   }
+
+  getMovieDetails(movieId: number): Observable<Movie> {
+  const detailUrl = `${this.apiUrl}/movie/${movieId}`;
+  return this.http.get<Movie>(detailUrl);
+}
+
+getTvShowDetails(tvShowId: number): Observable<TvShow> {
+  const detailUrl = `${this.apiUrl}/tv/${tvShowId}`;
+  return this.http.get<TvShow>(detailUrl);
+}
+
+getMovieCredits(movieId: number): Observable<CreditsResponse> {
+  const creditsUrl = `${this.apiUrl}/movie/${movieId}/credits`;
+  return this.http.get<CreditsResponse>(creditsUrl);
+}
+
+getTvShowCredits(tvShowId: number): Observable<CreditsResponse> {
+  const creditsUrl = `${this.apiUrl}/tv/${tvShowId}/credits`;
+  return this.http.get<CreditsResponse>(creditsUrl);
+}
+
 }
