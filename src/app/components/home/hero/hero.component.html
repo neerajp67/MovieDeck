@@ -31,7 +31,8 @@
           <p class="mat-body-1 overview fade-in-up delay-3">{{ currentMovie.overview }}</p>
 
           <button mat-flat-button color="primary" class="button-big fade-in-up delay-4"
-                  [attr.aria-label]="'View details for ' + currentMovie.title">
+                  [attr.aria-label]="'View details for ' + currentMovie.title"
+                  (click)="viewDetails(currentMovie.id)">
             <mat-icon>info</mat-icon> View Details
           </button>
         </ng-container>
