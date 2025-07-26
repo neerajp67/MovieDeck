@@ -7,8 +7,9 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 interface NavLink {
-  path: string;
-  label: string;
+  path: string,
+  label: string,
+  data?: string  
 }
 
 @Component({
@@ -29,6 +30,8 @@ export class NavbarComponent {
 
   navLinks: NavLink[] = [
     { path: '/home', label: 'Home' },
-    { path: '/list', label: 'Movie List' }
+    { path: '/movies', label: 'Movies'},
+    { path: '/shows', label: 'TV Shows'},
+    { path: '/people', label: 'People' }
   ];
 }

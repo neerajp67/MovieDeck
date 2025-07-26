@@ -1,58 +1,288 @@
-:host {
-  display: block;
-}
+// breakpoints for responsiveness
+$breakpoint-tablet: 768px;
+$breakpoint-mobile: 480px;
+
+// Define colors variables
+$primary-red: #e50914;
+$darker-red: #cc0812; // A darker shade for hover
+$white-color: #ffffff;
+$black-color-translucent-medium: rgba(0, 0, 0, 0.5);
+$black-color-translucent-dark: rgba(0, 0, 0, 0.6);
 
 .hero-section-container {
-  padding: 40px 20px;
-  background-color: #f5f5f5;
-  text-align: center;
+  position: relative;
+  width: 100%;
+  height: 100vh; /* hero section height,adjust if navigation bar is added/removed in future*/
+  overflow: hidden;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  background-color: #000; 
+
+  @media (max-width: $breakpoint-tablet) {
+    height: 70vh; /* 70% viewport height for mobile */
+  }
 }
 
-.hero-content {
+/* --- Background Layer Styles (Movie Image) --- */
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000;
+
+  .image-slideshow-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .hero-background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: opacity 1s ease-in-out;
+    opacity: 0; 
+
+    &.fade-in {
+      opacity: 1;
+    }
+  }
+
+  .background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.6) 50%,
+      rgba(0, 0, 0, 0.9) 100%
+    );
+    z-index: 0;
+  }
+}
+
+/* --- Foreground Layer Styles (Movie Details and Controls) --- */
+.foreground {
+  position: absolute;
+  z-index: 1;
+  color: $white-color;
+  width: 100%;
+  max-width: 1600px; /* Limits the max width of the content for readability */
+  padding: 40px;
+  box-sizing: border-box;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+
+  // This ensures foreground content is pushed to the bottom on large screens
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 30px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
+  justify-content: flex-end;
 
-.mat-headline-medium {
-  margin-bottom: 16px;
-  font-weight: 500;
-}
-
-.cta-button {
-  padding: 10px 30px;
-  font-size: 1rem;
-}
-
-.hero-image-container {
-  width: 100%;
-  max-width: 500px;
-}
-
-.hero-image {
-  width: 100%;
-  height: auto;
-}
-
-@media (min-width: 768px) {
-  .hero-section-container {
-    text-align: left;
-  }
-
-  .hero-content {
+  .foreground-sub {
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 40px;
+    align-items: flex-end;
+    width: 100%;
+
+    @media (max-width: $breakpoint-tablet) {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+  }
+}
+
+/* --- Movie Details Container (Fixed at bottom-left on large screens) --- */
+.details-container {
+  position: absolute;
+  bottom: 60px;
+  left: 40px;
+  max-width: 65%;
+  flex: none;
+  transform: none;
+  text-align: left;
+
+  @media (max-width: $breakpoint-tablet) {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    max-width: 90%;
+    padding-bottom: 0;
+    margin-bottom: 20px;
+    text-align: center;
   }
 
-  .hero-text {
-    flex: 1;
+  h1 {
+    font-size: 4em;
+    margin-bottom: 10px;
+    line-height: 1.1;
+
+    @media (max-width: $breakpoint-tablet) {
+      font-size: 2.5em;
+    }
+    @media (max-width: $breakpoint-mobile) {
+      font-size: 2em;
+    }
   }
 
-  .hero-image-container {
-    flex: 1;
+  p {
+    font-size: 1.2em;
+    margin-bottom: 8px;
+
+    &.genres {
+      font-size: 1em;
+      opacity: 0.8;
+    }
+
+    &.overview {
+      margin-top: 20px;
+      line-height: 1.6;
+      max-height: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+      opacity: 0.9;
+
+      @media (max-width: $breakpoint-tablet) {
+        max-height: 120px;
+        -webkit-line-clamp: 4;
+      }
+      @media (max-width: $breakpoint-mobile) {
+        max-height: 90px;
+        -webkit-line-clamp: 3;
+      }
+    }
+    @media (max-width: $breakpoint-tablet) {
+      font-size: 1em;
+    }
   }
+
+  .button-big {
+    margin-top: 30px;
+    padding: 12px 30px;
+    font-size: 1.1em;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: $primary-red;
+    color: $white-color;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+      background-color: $darker-red;
+      transform: scale(1.05);
+    }
+    mat-icon {
+        margin-right: 8px;
+    }
+    @media (max-width: $breakpoint-mobile) {
+        padding: 10px 20px;
+        font-size: 1em;
+        margin-top: 20px;
+    }
+  }
+}
+
+/* --- Navigation Arrows --- */
+.navigation-arrows {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  padding: 0 10px;
+  z-index: 2;
+  pointer-events: none;
+
+  button {
+    background-color: $black-color-translucent-medium;
+    color: $white-color;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    min-height: 50px;
+    transition: background-color 0.3s ease;
+    pointer-events: all;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    mat-icon {
+        font-size: 30px;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+  }
+}
+
+/* --- Mobile Navigation Dots --- */
+.mobile-navigation-dots {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 3;
+  padding-bottom: 20px;
+
+  span {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+
+    &.active {
+      background-color: $primary-red;
+      transform: scale(1.2);
+    }
+
+    &:hover:not(.active) {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+  }
+}
+
+
+/* --- Fade-in Animations for Text (Staggered Effect) --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+
+  &.delay-1 { animation-delay: 0.1s; }
+  &.delay-2 { animation-delay: 0.2s; }
+  &.delay-3 { animation-delay: 0.3s; }
+  &.delay-4 { animation-delay: 0.4s; }
 }

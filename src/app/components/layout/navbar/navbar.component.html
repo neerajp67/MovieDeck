@@ -8,10 +8,7 @@
   <span class="navbar-spacer"></span>
 
   <div class="desktop-links">
-    <a *ngFor="let link of navLinks"
-       mat-button
-       [routerLink]="link.path"
-       routerLinkActive="active-link">
+    <a *ngFor="let link of navLinks" mat-button [routerLink]="link.path" routerLinkActive="active-link">
       {{ link.label }}
     </a>
   </div>
@@ -21,11 +18,8 @@
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #mobileMenu="matMenu" class="mobile-menu-items">
-      <a *ngFor="let link of navLinks"
-         mat-menu-item
-         [routerLink]="link.path"
-         (click)="$event.stopPropagation()" 
-         routerLinkActive="active-link-mobile"> 
+      <a *ngFor="let link of navLinks" mat-menu-item [routerLink]="link.path" (click)="$event.stopPropagation()"
+        routerLinkActive="active-link-mobile">
         {{ link.label }}
       </a>
     </mat-menu>
