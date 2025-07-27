@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-// import { NavbarComponent } from './components/layout/navbar/navbar.component';
+import { NavbarComponent } from './components/layout/navbar/navbar.component';
 import { FooterComponent } from './components/layout/footer/footer.component';
 import { StoreService } from './services/utils/store.service';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet,
     CommonModule,
-    // NavbarComponent,
+    NavbarComponent,
     FooterComponent
   ],
   templateUrl: './app.component.html',
