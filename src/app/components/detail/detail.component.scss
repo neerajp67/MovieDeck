@@ -6,6 +6,7 @@
 }
 
 .detail-page-wrapper {
+  padding-top: 2rem;
   position: relative;
   background-size: cover;
   background-position: center center;
@@ -24,7 +25,8 @@
   }
 }
 
-.loading-indicator, .error-message {
+.loading-indicator,
+.error-message {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -35,7 +37,9 @@
   z-index: 2;
   text-align: center;
 
-  p { margin-bottom: 16px; }
+  p {
+    margin-bottom: 16px;
+  }
 }
 
 .detail-content-container {
@@ -91,11 +95,13 @@
     .genres {
       display: contents;
     }
+
     .genre-chip.mat-mdc-chip {
       padding: 4px 8px;
       font-size: 0.8rem;
       min-height: 24px;
     }
+
     .runtime::before {
       content: "•";
       margin-right: 8px;
@@ -120,6 +126,7 @@
         font-weight: bold;
         line-height: 1;
       }
+
       .score-label {
         font-size: 0.8rem;
         opacity: 0.8;
@@ -139,24 +146,38 @@
     font-size: 1.1rem;
   }
 
-  .overview-section, .crew-section {
+  .overview-section,
+  .crew-section {
     margin-bottom: 24px;
-    h3, h4 {
+
+    h3,
+    h4 {
       font-size: 1.3rem;
       font-weight: 500;
       margin-bottom: 8px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       padding-bottom: 4px;
     }
-    p, span {
+
+    p,
+    span {
       font-size: 0.95rem;
       line-height: 1.6;
       opacity: 0.9;
     }
+
     .crew-list {
       margin-bottom: 12px;
-      h4 { font-size: 1rem; border-bottom: none; opacity: 0.8; }
-      span { font-size: 0.9rem; }
+
+      h4 {
+        font-size: 1rem;
+        border-bottom: none;
+        opacity: 0.8;
+      }
+
+      span {
+        font-size: 0.9rem;
+      }
     }
   }
 }
@@ -184,8 +205,12 @@
   .poster-column {
     width: 342px;
   }
+
   .info-column .title {
     font-size: 2.8rem;
-    .release-year { font-size: 2.2rem; }
+
+    .release-year {
+      font-size: 2.2rem;
+    }
   }
 }
