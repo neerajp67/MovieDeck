@@ -6,6 +6,7 @@ import { Genre, Movie } from '../../../models/tmdb.model';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-hero',
@@ -29,7 +30,10 @@ export class HeroComponent implements OnInit, OnDestroy {
   private imageLoadTimeout: any;
 
   movieService = inject(TmdbApiService)
-  constructor(private storeService: StoreService, private cdr: ChangeDetectorRef) {
+  constructor(private storeService: StoreService, 
+    private cdr: ChangeDetectorRef,
+    private router: Router
+  ) {
 
   }
   ngOnInit(): void {
@@ -139,6 +143,10 @@ export class HeroComponent implements OnInit, OnDestroy {
         this.startSlideshowTimer(3000);
       }, 1100);
     }, 100);
+  }
+
+  viewDetails(id: any) {
+    this.router.navigate(['movie', id])
   }
 
   ngOnDestroy(): void {

@@ -1,53 +1,136 @@
-:host {
-  display: block;
-}
+$breakpoint-desktop: 769px;
+$navbar-height: 64px;
+
+$transparent-navbar-bg: rgba(0, 0, 0, 0.5);
+
+$text-color: #ffffff;
+$accent-color: #e50914;
+$hover-color: rgba(255, 255, 255, 0.1);
+
+$mobile-menu-bg: rgba(0, 0, 0, 0.8);
+$mobile-menu-item-text-color: $text-color;
+$mobile-menu-item-hover-bg: $hover-color;
 
 .app-navbar {
-  display: flex;
-  align-items: center;
-}
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: $navbar-height;
+  z-index: 1000;
+  background: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+  transition: background-color 0.3s ease;
+  color: $text-color;
 
-.app-name-container {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-}
+  .app-name-container {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 0 16px 0 0;
+  }
 
-.app-logo {
-  height: 32px;
-  margin-right: 8px;
-  vertical-align: middle;
-}
+  .app-logo {
+    height: 64px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
 
-.app-name-text {
-  font-size: 1.2rem;
-  font-weight: 500;
-}
+  .app-name-text {
+    font-size: 1.2rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
 
-.navbar-spacer {
-  flex: 1 1 auto;
-}
+  .navbar-spacer {
+    flex: 1 1 auto;
+  }
 
-.desktop-links {
-  display: none;
-}
-
-.mobile-menu {
-  display: block;
-}
-
-.active-link, .active-link-mobile {
-  font-weight: bold;
-}
-
-@media (min-width: 768px) {
   .desktop-links {
     display: flex;
     align-items: center;
+
+    a {
+      color: $text-color;
+      font-size: 1rem;
+      font-weight: 400;
+      transition: background-color 0.2s ease, color 0.2s ease;
+
+      mat-icon {
+        margin-right: 8px;
+      }
+
+      &:hover {
+        background-color: $hover-color;
+      }
+
+      &.active-link {
+        color: $accent-color;
+        font-weight: 700;
+      }
+    }
   }
 
   .mobile-menu {
     display: none;
+  }
+
+  @media (max-width: $breakpoint-desktop) {
+    .desktop-links {
+      display: none;
+    }
+
+    .mobile-menu {
+      display: block;
+    }
+
+    .app-name-container {
+      padding: 0 8px 0 0;
+    }
+
+    .app-logo {
+      height: 28px;
+    }
+
+    .app-name-text {
+      font-size: 1rem;
+    }
+
+    .mobile-menu-button {
+      color: $text-color;
+    }
+  }
+}
+
+.mobile-menu-items.mat-menu-panel {
+  background-color: $mobile-menu-bg;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  overflow: hidden;
+
+  .mat-menu-content {
+    padding: 0;
+
+    a.mat-menu-item {
+      color: $mobile-menu-item-text-color;
+      font-size: 1rem;
+      line-height: $navbar-height;
+      height: $navbar-height;
+
+      mat-icon {
+        margin-right: 10px;
+        color: $mobile-menu-item-text-color;
+      }
+
+      &:hover {
+        background-color: $mobile-menu-item-hover-bg;
+      }
+
+      &.active-link-mobile {
+        background-color: rgba($accent-color, 0.2);
+        color: $accent-color;
+        font-weight: bold;
+      }
+    }
   }
 }

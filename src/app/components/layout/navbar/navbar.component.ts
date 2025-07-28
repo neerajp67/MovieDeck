@@ -9,7 +9,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 interface NavLink {
   path: string,
   label: string,
-  data?: string  
+  icon?: string,
 }
 
 @Component({
@@ -26,12 +26,12 @@ interface NavLink {
 })
 export class NavbarComponent {
   appName: string = 'MOVIEDECK';
-  appLogo: string = '/assets/images/product_img.png'
+  appLogo: string = '/assets/logo/product_logo.png'
 
-  navLinks: NavLink[] = [
-    { path: '/home', label: 'Home' },
-    { path: '/movies', label: 'Movies'},
-    { path: '/shows', label: 'TV Shows'},
-    { path: '/people', label: 'People' }
-  ];
+ navLinks: NavLink[] = [
+    { path: '/home', label: 'Home', icon: 'home' },
+    { path: '/movies', label: 'Movies', icon: 'movie' },
+    { path: '/shows', label: 'TV Shows', icon: 'tv' },
+    { path: '/people', label: 'People', icon: 'people' }
+  ];  
 }
