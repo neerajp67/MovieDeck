@@ -147,7 +147,7 @@ export class TrendingComponent implements OnInit, OnDestroy {
   }
 
   private updateScrollArrowVisibility(): void {
-    if (!this?.scrollContainer.nativeElement) {
+    if (!this?.scrollContainer?.nativeElement) {
       this.canScrollLeft = false;
       this.canScrollRight = false;
       this.cdr.detectChanges();
