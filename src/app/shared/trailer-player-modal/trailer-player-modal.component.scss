@@ -1,0 +1,144 @@
+/* trailer-player-modal.component.scss */
+
+.trailer-modal-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: #1a1a1a;
+  color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+
+  .modal-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    padding-right: 16px;
+  }
+
+  button.mat-icon-button {
+    color: #fff;
+    transition: color 0.2s ease;
+    &:hover {
+      color: #e50914;
+    }
+  }
+}
+
+.modal-body {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+
+  .loading-overlay,
+  .error-message-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 10;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+
+    .loading-poster-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.4) blur(5px);
+      z-index: 1;
+    }
+
+    .loading-gradient-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9));
+      z-index: 2;
+    }
+
+    mat-spinner {
+      z-index: 3;
+      margin-bottom: 15px;
+    }
+    p {
+      z-index: 3;
+      font-size: 1.1rem;
+      margin: 0;
+    }
+    button.mat-button {
+      margin-top: 20px;
+      background-color: #e50914;
+      color: #fff;
+      &:hover {
+        background-color: #cc0812;
+      }
+    }
+  }
+}
+
+.video-player-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  background-color: #000;
+
+  .youtube-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+}
+
+.mat-mdc-dialog-container {
+  .mat-mdc-dialog-surface {
+    padding: 0 !important;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  &.video-loaded {
+    .mat-mdc-dialog-surface {
+      max-width: 90vw !important;
+      max-height: 90vh !important;
+      width: auto !important;
+      height: auto !important;
+    }
+  }
+}
