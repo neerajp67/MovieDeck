@@ -26,7 +26,7 @@ interface NavLink {
 })
 export class NavbarComponent {
   appName: string = 'MOVIEDECK';
-  appLogo: string = '/assets/logo/product_logo.png'
+  appLogo: string = 'assets/logo/product_logo.png'
 
  navLinks: NavLink[] = [
     { path: '/home', label: 'Home', icon: 'home' },
