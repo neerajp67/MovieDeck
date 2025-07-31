@@ -31,7 +31,7 @@
 
     <div class="horizontal-scroll-container" (scroll)="onScroll()" #scrollContainer>
       <div class="scrollable-content" (mousedown)="onMouseDown($event)">
-        <mat-card *ngFor="let trailer of trailers" class="trailer-item-card" (click)="openTrailer(trailer.trailerKey)">
+        <mat-card *ngFor="let trailer of trailers" class="trailer-item-card" (click)="openTrailer(trailer)">
           <img [src]="getYouTubeThumbnail(trailer.trailerKey)" [alt]="trailer.title + ' trailer thumbnail'"
             class="trailer-card-background-image">
           <mat-icon class="play-icon">play_circle_filled</mat-icon>

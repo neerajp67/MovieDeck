@@ -7,6 +7,7 @@ import { Subject, Observable, switchMap, of, map, catchError, forkJoin, takeUnti
 import { TmdbResponse, Movie } from '../../../models/tmdb.model';
 import { TmdbApiService } from '../../../services/api/tmdb-api.service';
 import { MatCardModule } from '@angular/material/card';
+import { TrailerPlayerService } from '../../../services/utils/trailer-player.service';
 
 @Component({
   selector: 'app-trailers',
@@ -44,7 +45,8 @@ export class TrailersComponent implements OnInit, OnDestroy {
 
   constructor(
     private movieService: TmdbApiService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private trailerPlayerService: TrailerPlayerService
   ) { }
 
   ngOnInit(): void {
@@ -238,9 +240,18 @@ export class TrailersComponent implements OnInit, OnDestroy {
     return key ? `https://img.youtube.com/vi/${key}/mqdefault.jpg` : 'https://via.placeholder.com/320x180.png?text=No+Trailer';
   }
 
-  openTrailer(key: string | null): void {
-    if (key) {
-      window.open(`https://www.youtube.com/watch?v=${key}`, '_blank');
+  openTrailer(trailerItem: TrailerItem): void {
+    // Only open if a trailerKey is available
+    if (trailerItem?.trailerKey) {
+      this.trailerPlayerService.openTrailerModal({
+        title: trailerItem.title,
+        posterPath: trailerItem.posterPath,
+        trailerKey: trailerItem.trailerKey,
+        isLoading: false,
+        errorMessage: null
+      });
+    } else {
+      console.warn('No trailer key available for this item (should have been filtered out):', trailerItem.title);
     }
   }
 
