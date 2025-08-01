@@ -1,9 +1,9 @@
 // src/app/services/tmdb.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Movie, TmdbResponse, VideoResponse } from '../../models/tmdb.model';
+import { CreditsResponse, Genre, Movie, TmdbResponse, TvShow, VideoResponse } from '../../models/tmdb.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +14,45 @@ export class TmdbApiService {
 
   constructor(private http: HttpClient) { }
 
-  getFullImageUrl(path: string | null, size: string = 'w500'): string | null {
+  // getFullImageUrl(path: string | null, size: string = 'w500'): string | null {
+  //   if (!path) {
+  //     return 'https://via.placeholder.com/500x750.png?text=No+Image';
+  //   }
+  //   return `${this.imageBaseUrl}${size}${path}`;
+  // }
+
+  /**
+  * Constructs the full image URL based on path and desired size.
+  * Dynamically selects size based on screen width for backdrops.
+  * @param path The image path from TMDB (e.g., /xyz.jpg).
+  * @param type The type of image ('backdrop' for hero, 'poster' for others, etc.).
+  * @returns The full URL string or a placeholder if path is null.
+  */
+  getFullImageUrl(path: string | null, size: string = 'w500', type: 'backdrop' | 'poster' = 'backdrop'): string {
     if (!path) {
-      return 'https://via.placeholder.com/500x750.png?text=No+Image';
+      return 'https://via.placeholder.com/1280x720.png?text=No+Image'; // Placeholder for backdrop size
     }
+
+    const screenWidth = window.innerWidth;
+
+    if (type === 'backdrop') {
+      if (screenWidth <= 768) { // Mobile breakpoint
+        size = 'w500'; // Smaller size for mobile backgrounds
+      } else if (screenWidth <= 1280) {
+        size = 'w780'; // Medium size for tablets/smaller desktops
+      } else {
+        size = 'w1280'; // Larger size for big screens (or 'original' if desired for huge displays)
+      }
+    } else if (type === 'poster') {
+      if (screenWidth <= 768) {
+        size = 'w185';
+      } else {
+        size = 'w342';
+      }
+    } else {
+      size = 'original'; // Fallback for other types
+    }
+
     return `${this.imageBaseUrl}${size}${path}`;
   }
 
@@ -32,6 +67,7 @@ export class TmdbApiService {
 
     return this.http.get<TmdbResponse<Movie>>(`${this.apiUrl}/discover/movie`, { params });
   }
+
   getPopularTvShows(page: number = 1, language: string = 'en-US'): Observable<TmdbResponse<Movie>> {
     const params = new HttpParams()
       .set('language', language)
@@ -40,6 +76,7 @@ export class TmdbApiService {
 
     return this.http.get<TmdbResponse<Movie>>(`${this.apiUrl}/discover/tv`, { params });
   }
+
   getTrendingMovies(timeWindow: 'day' | 'week' = 'week', language: string = 'en-US'): Observable<TmdbResponse> {
     const params = new HttpParams()
       .set('language', language);
@@ -47,6 +84,7 @@ export class TmdbApiService {
     const trendingMoviesUrl = `${this.apiUrl}/trending/movie/${timeWindow}`;
     return this.http.get<TmdbResponse>(trendingMoviesUrl, { params });
   }
+
   getMovieVideos(movieId: number): Observable<VideoResponse> {
     const videosUrl = `${this.apiUrl}/movie/${movieId}/videos`;
     return this.http.get<VideoResponse>(videosUrl);
@@ -88,4 +126,30 @@ export class TmdbApiService {
     const url = `${this.apiUrl}/movie/upcoming`;
     return this.http.get<TmdbResponse<Movie>>(url, { params });
   }
+
+  getMovieDetails(movieId: number): Observable<Movie> {
+    const detailUrl = `${this.apiUrl}/movie/${movieId}`;
+    return this.http.get<Movie>(detailUrl);
+  }
+
+  getTvShowDetails(tvShowId: number): Observable<TvShow> {
+    const detailUrl = `${this.apiUrl}/tv/${tvShowId}`;
+    return this.http.get<TvShow>(detailUrl);
+  }
+
+  getMovieCredits(movieId: number): Observable<CreditsResponse> {
+    const creditsUrl = `${this.apiUrl}/movie/${movieId}/credits`;
+    return this.http.get<CreditsResponse>(creditsUrl);
+  }
+
+  getTvShowCredits(tvShowId: number): Observable<CreditsResponse> {
+    const creditsUrl = `${this.apiUrl}/tv/${tvShowId}/credits`;
+    return this.http.get<CreditsResponse>(creditsUrl);
+  }
+
+  getMovieGenre(): Observable<Genre[]> {
+    const genreUrl = `${this.apiUrl}/genre/movie/list`;
+    return this.http.get<Genre[]>(genreUrl);
+  }
+
 }

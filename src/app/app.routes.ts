@@ -5,8 +5,11 @@ import { DetailComponent } from './components/detail/detail.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'list', component: ListComponent },
-  { path: 'detail', component: DetailComponent },
+  { path: 'movies', component: ListComponent },
+  { path: 'shows', component: ListComponent },
+  { path: 'people', component: ListComponent },
+  { path: 'movie/:id', component: DetailComponent, data: { mediaType: 'movie' } },
+  { path: 'tv/:id', component: DetailComponent, data: { mediaType: 'tv' } },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }
 ];

@@ -21,20 +21,36 @@
     <p>No trailers found for this selection.</p>
   </div>
 
-  <div class="horizontal-scroll-container" *ngIf="!isLoading && trailers.length > 0">
-    <div class="scrollable-content">
-      <div *ngFor="let trailer of trailers" class="trailer-item-card">
-        <div class="trailer-thumbnail-container" (click)="openTrailer(trailer.trailerKey)">
+  <div class="scroll-wrapper" (mouseenter)="onScrollWrapperMouseEnter()" (mouseleave)="onScrollWrapperMouseLeave()"
+    *ngIf="!isLoading && trailers.length > 0">
+
+    <button mat-icon-button class="scroll-arrow left-arrow" *ngIf="showArrows && canScrollLeft"
+      (click)="scrollContentLeft()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <div class="horizontal-scroll-container" (scroll)="onScroll()" #scrollContainer>
+      <div class="scrollable-content" (mousedown)="onMouseDown($event)">
+        <mat-card *ngFor="let trailer of trailers" class="trailer-item-card" (click)="openTrailer(trailer)">
           <img [src]="getYouTubeThumbnail(trailer.trailerKey)" [alt]="trailer.title + ' trailer thumbnail'"
-            class="trailer-thumbnail">
+            class="trailer-card-background-image">
           <mat-icon class="play-icon">play_circle_filled</mat-icon>
-        </div>
-        <div class="trailer-info">
-          <h3 class="trailer-title">{{ trailer.title }}</h3>
-          <p *ngIf="trailer.releaseDate" class="trailer-release-date"> {{ trailer.releaseDate | date:'MMM d, y' }}
-          </p>
-        </div>
+          
+          <div class="trailer-card-overlay"></div>
+
+          <mat-card-content class="trailer-info-content">
+            <mat-card-title class="trailer-title">{{ trailer.title }}</mat-card-title>
+            <mat-card-subtitle *ngIf="trailer.releaseDate" class="trailer-release-date">
+              {{ trailer.releaseDate | date:'MMM d, y' }}
+            </mat-card-subtitle>
+          </mat-card-content>
+        </mat-card>
       </div>
     </div>
+
+    <button mat-icon-button class="scroll-arrow right-arrow" *ngIf="showArrows && canScrollRight"
+      (click)="scrollRight()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
   </div>
 </section>

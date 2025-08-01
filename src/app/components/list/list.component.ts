@@ -11,6 +11,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TmdbApiService } from '../../services/api/tmdb-api.service';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -39,7 +40,9 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(public movieService: TmdbApiService) { }
+  constructor(public movieService: TmdbApiService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.loadMedia(this.currentPage);
@@ -82,6 +85,14 @@ export class ListComponent implements OnInit, OnDestroy {
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.loadMedia(page);
+    }
+  }
+
+  navigateToDetails(item: number) {
+    if (item) {
+      this.router.navigate(['/', this.selectedMediaType, item]);
+    } else {
+      console.error('Cannot navigate to detail: item or item.id is missing', item);
     }
   }
 

@@ -7,8 +7,9 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 interface NavLink {
-  path: string;
-  label: string;
+  path: string,
+  label: string,
+  icon?: string,
 }
 
 @Component({
@@ -25,10 +26,12 @@ interface NavLink {
 })
 export class NavbarComponent {
   appName: string = 'MOVIEDECK';
-  appLogo: string = '/assets/images/product_img.png'
+  appLogo: string = 'assets/logo/product_logo.png'
 
-  navLinks: NavLink[] = [
-    { path: '/home', label: 'Home' },
-    { path: '/list', label: 'Movie List' }
-  ];
+ navLinks: NavLink[] = [
+    { path: '/home', label: 'Home', icon: 'home' },
+    { path: '/movies', label: 'Movies', icon: 'movie' },
+    { path: '/shows', label: 'TV Shows', icon: 'tv' },
+    { path: '/people', label: 'People', icon: 'people' }
+  ];  
 }
