@@ -1,7 +1,8 @@
 <div class="trending-section">
   <div class="trending-header">
     <h2>Trending</h2>
-    <mat-button-toggle-group [(ngModel)]="activeTimeWindow" (ngModelChange)="loadTrendingMovies()" aria-label="Time window selection">
+    <mat-button-toggle-group [(ngModel)]="activeTimeWindow" (ngModelChange)="loadTrendingMovies()"
+      aria-label="Time window selection">
       <mat-button-toggle value="day">Today</mat-button-toggle>
       <mat-button-toggle value="week">This Week</mat-button-toggle>
     </mat-button-toggle-group>
@@ -19,17 +20,35 @@
     <p>No trending movies found for {{ activeTimeWindow === 'day' ? 'today' : 'this week' }}.</p>
   </div>
 
-  <div class="horizontal-scroll-container" *ngIf="!isLoading && trendingMovies.length > 0">
-    <div class="scrollable-content">
-      <mat-card *ngFor="let movie of trendingMovies" class="movie-card-item"  (click)="navigateToDetails(movie.id)">
-        <img mat-card-image [src]="movieService.getFullImageUrl(movie.poster_path, 'w300')" [alt]="movie.title" (error)="movie.poster_path=null">
-        <mat-card-content class="movie-card-content">
-          <mat-card-title>{{ movie.title }}</mat-card-title>
-          <mat-card-subtitle *ngIf="movie.release_date">
-            {{ movie.release_date | date:'MMM dd' }}
-          </mat-card-subtitle>
-        </mat-card-content>
-      </mat-card>
+  <div class="scroll-wrapper" (mouseenter)="onScrollWrapperMouseEnter()" (mouseleave)="onScrollWrapperMouseLeave()"
+    *ngIf="!isLoading && trendingMovies.length > 0">
+
+    <button mat-icon-button class="scroll-arrow left-arrow" *ngIf="showArrows && canScrollLeft"
+      (click)="scrollContentLeft()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <div class="horizontal-scroll-container" (scroll)="onScroll()" #scrollContainer>
+      <div class="scrollable-content" (mousedown)="onMouseDown($event)">
+        <mat-card *ngFor="let movie of trendingMovies" class="movie-card-item" (click)="navigateToDetails(movie.id)">
+          <img [src]="movieService.getFullImageUrl(movie.poster_path, 'w300')" [alt]="movie.title"
+            (error)="movie.poster_path=null" class="movie-card-background-image">
+
+          <div class="movie-card-overlay"></div>
+
+          <mat-card-content class="movie-card-content">
+            <mat-card-title>{{ movie.title }}</mat-card-title>
+            <mat-card-subtitle *ngIf="movie.release_date">
+              {{ movie.release_date | date:'MMM dd' }}
+            </mat-card-subtitle>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </div>
+
+    <button mat-icon-button class="scroll-arrow right-arrow" *ngIf="showArrows && canScrollRight"
+      (click)="scrollRight()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
   </div>
 </div>

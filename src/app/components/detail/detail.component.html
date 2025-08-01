@@ -1,6 +1,5 @@
-<div class="detail-page-wrapper" 
-    >
-  
+<div class="detail-page-wrapper">
+
   <div class="backdrop-overlay"></div>
 
   <div *ngIf="isLoading" class="loading-indicator">
@@ -14,11 +13,9 @@
 
   <div *ngIf="mediaItem && !isLoading" class="detail-content-container">
     <div class="poster-column">
-      <img [src]="movieService.getFullImageUrl(mediaItem.poster_path, 'w500')" 
-           [alt]="mediaItem.title || mediaItem.name" 
-           class="detail-poster"
-           (error)="mediaItem.poster_path = null">
-      </div>
+      <img [src]="movieService.getFullImageUrl(mediaItem.poster_path, 'w500')" [alt]="mediaItem.title || mediaItem.name"
+        class="detail-poster" (error)="mediaItem.poster_path = null">
+    </div>
 
     <div class="info-column">
       <h1 class="title">
@@ -49,9 +46,9 @@
         <div class="user-score" *ngIf="mediaItem.vote_average">
           <span class="score-value">{{ mediaItem.vote_average * 10 | number:'1.0-0' }}%</span>
           <span class="score-label">User Score</span>
-          </div>
+        </div>
         <div class="action-buttons">
-          <button mat-icon-button aria-label="Add to list"matTooltip="Add to list (placeholder)">
+          <button mat-icon-button aria-label="Add to list" matTooltip="Add to list (placeholder)">
             <mat-icon>list</mat-icon>
           </button>
           <button mat-icon-button aria-label="Favorite" matTooltip="Favorite (placeholder)">
@@ -65,7 +62,7 @@
           </button>
         </div>
       </div>
-      
+
       <p class="tagline" *ngIf="mediaItem.tagline">{{ mediaItem.tagline }}</p>
 
       <div class="overview-section" *ngIf="mediaItem.overview">

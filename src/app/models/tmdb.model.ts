@@ -87,3 +87,8 @@ export interface CreditsResponse {
   cast: CastMember[];
   crew: CrewMember[];
 }
+
+export interface Genre {
+  id: number;
+  name: string;
+}
