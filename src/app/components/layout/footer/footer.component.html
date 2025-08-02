@@ -1,3 +1,71 @@
-<mat-toolbar class="app-footer">
-    <p>footer works!</p>
-</mat-toolbar>
+<footer class="app-footer-container">
+  <div class="footer-primary-content">
+    <div class="footer-brand-info">
+      <a class="footer-app-container" routerLink="/">
+        <img src="assets/images/product_img.png" alt="MovieDeck Logo" class="footer-app-logo">
+        <span class="footer-app-name-text">{{appName}}</span>
+      </a>
+      <p class="app-description">
+        MovieDeck is a web application for discovering the latest trending movies and TV shows. Powered by the TMDb API,
+        it provides a seamless way to browse popular titles and watch their trailers, showcasing a modern, responsive
+        user experience.
+      </p>
+    </div>
+
+    <div class="footer-links">
+      <div class="footer-column">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a routerLink="/home" routerLinkActive="active-link">Home</a></li>
+          <li><a routerLink="/movies" routerLinkActive="active-link">Movies</a></li>
+          <li><a routerLink="/shows" routerLinkActive="active-link">TV Shows</a></li>
+          <li><a routerLink="/people" routerLinkActive="active-link">People</a></li>
+        </ul>
+      </div>
+
+      <!-- todo add portfolio links -->
+      <!-- <div class="footer-column">
+        <h3>More From Me</h3>
+        <ul>
+          <li><a href="" target="_blank" rel="noopener noreferrer">About Me</a></li>
+          <li><a href="" target="_blank" rel="noopener noreferrer">Contact</a></li>
+          <li><a href="" target="_blank" rel="noopener noreferrer">Support</a></li>
+        </ul>
+      </div> -->
+      <div class="footer-column">
+        <h3>Connect</h3>
+        <div class="social-icons">
+          <a href="https://www.linkedin.com/in/neerajp67" target="_blank" rel="noopener noreferrer"
+            aria-label="LinkedIn" title="LinkedIn -Neeraj Pandey">
+            <mat-icon svgIcon="linkedin"></mat-icon>
+          </a>
+          <a href="https://github.com/neerajp67" target="_blank" rel="noopener noreferrer" aria-label="Github"
+            title="Github -Neeraj Pandey">
+            <mat-icon svgIcon="github"></mat-icon>
+          </a>
+          <a href="https://x.com/neerajp67" target="_blank" rel="noopener noreferrer" aria-label="Twitter"
+            title="X - Neeraj Pandey">
+            <mat-icon svgIcon="twitter"></mat-icon>
+          </a>
+          <a href="https://www.instagram.com/neerajp67" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+            title="Instagram - Neeraj Pandey">
+            <mat-icon svgIcon="instagram"></mat-icon>
+          </a>
+          <a href="https://github.com/neerajp67/MovieDeck" target="_blank" rel="noopener noreferrer"
+            aria-label="Application Source Code" title="Source Code - MovieDeck">
+            <mat-icon> code </mat-icon> </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-legal-attribution">
+    <p class="tmdb-attribution">
+      This product uses the TMDb API but is not endorsed or certified by TMDb.
+      <img src="assets/logo/tmdb_logo.svg" alt="TMDb Logo" class="tmdb-logo">
+    </p>
+    <p class="copyright-info">
+      &copy; 2025 {{appName}}. All rights reserved.
+    </p>
+  </div>
+</footer>

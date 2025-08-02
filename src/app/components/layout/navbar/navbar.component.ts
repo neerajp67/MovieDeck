@@ -25,7 +25,7 @@ interface NavLink {
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-  appName: string = 'MOVIEDECK';
+  appName: string = 'MovieDeck';
   appLogo: string = 'assets/logo/product_logo.png'
 
  navLinks: NavLink[] = [
