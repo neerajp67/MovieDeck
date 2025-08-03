@@ -1,5 +1,5 @@
-<section class="trailers-section">
-  <div class="trailers-header">
+<section class="content-section">
+  <div class="content-header">
     <h2>Latest Trailers</h2>
     <mat-button-toggle-group [value]="selectedCategory" (change)="selectCategory($event.value)"
       aria-label="Select trailer category">
@@ -9,15 +9,15 @@
     </mat-button-toggle-group>
   </div>
 
-  <div *ngIf="isLoading" class="loading-indicator">
+  <div *ngIf="isLoading" class="info-message">
     <mat-spinner diameter="50"></mat-spinner>
   </div>
 
-  <div *ngIf="errorMessage && !isLoading" class="error-message">
+  <div *ngIf="errorMessage && !isLoading" class="info-message error-message">
     <p>{{ errorMessage }}</p>
   </div>
 
-  <div *ngIf="!isLoading && !errorMessage && trailers.length === 0" class="no-trailers">
+  <div *ngIf="!isLoading && !errorMessage && trailers.length === 0" class="info-message">
     <p>No trailers found for this selection.</p>
   </div>
 
@@ -31,16 +31,16 @@
 
     <div class="horizontal-scroll-container" (scroll)="onScroll()" #scrollContainer>
       <div class="scrollable-content" (mousedown)="onMouseDown($event)">
-        <mat-card *ngFor="let trailer of trailers" class="trailer-item-card" (click)="openTrailer(trailer)">
+        <mat-card *ngFor="let trailer of trailers" class="media-card-item" (click)="openTrailer(trailer)">
           <img [src]="getYouTubeThumbnail(trailer.trailerKey)" [alt]="trailer.title + ' trailer thumbnail'"
-            class="trailer-card-background-image">
+            class="media-card-background-image">
           <mat-icon class="play-icon">play_circle_filled</mat-icon>
           
-          <div class="trailer-card-overlay"></div>
+          <div class="media-card-overlay"></div>
 
-          <mat-card-content class="trailer-info-content">
-            <mat-card-title class="trailer-title">{{ trailer.title }}</mat-card-title>
-            <mat-card-subtitle *ngIf="trailer.releaseDate" class="trailer-release-date">
+          <mat-card-content class="media-card-content">
+            <mat-card-title class="media-card-title">{{ trailer.title }}</mat-card-title>
+            <mat-card-subtitle *ngIf="trailer.releaseDate" class="media-card-subtitle">
               {{ trailer.releaseDate | date:'MMM d, y' }}
             </mat-card-subtitle>
           </mat-card-content>
