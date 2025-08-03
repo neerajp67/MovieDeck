@@ -1,6 +1,207 @@
-.app-footer {
+$footer-bg-color: #0d0d0d;
+$text-color: #ffffff;
+$light-text-color: rgba(255, 255, 255, 0.7);
+$accent-color: #e50914;
+$hover-color: rgba(255, 255, 255, 0.1);
+
+.app-footer-container {
+  background-color: $footer-bg-color;
+  color: $text-color;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+  margin-top: 2rem;
+}
+
+.footer-primary-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 30px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.footer-brand-info {
+  flex-grow: 1;
+  max-width: 40%;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
+
+  .footer-app-container {
     display: flex;
-    justify-content: center;
+    align-items: center;
     text-decoration: none;
     color: inherit;
+    margin-bottom: 15px;
+
+    @media (max-width: 768px) {
+      justify-content: center;
+      width: 100%;
+    }
+  }
+
+  .footer-app-logo {
+    height: 48px;
+    margin-right: 10px;
+  }
+
+  .footer-app-name-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .app-description {
+    color: $light-text-color;
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .footer-column {
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: $text-color;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        margin-bottom: 8px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        a {
+          text-decoration: none;
+          color: $light-text-color;
+          transition: color 0.2s ease;
+
+          &:hover {
+            color: $accent-color;
+          }
+
+          &.active-link {
+            color: $accent-color;
+            font-weight: 700;
+          }
+        }
+      }
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+
+      @media (max-width: 768px) {
+        justify-content: center;
+      }
+
+      a {
+        color: $light-text-color;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: $accent-color;
+        }
+      }
+    }
+  }
+}
+
+.footer-social-media {
+  @media (max-width: 768px) {
+    width: 100%;
+    text-align: center;
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: $text-color;
+  }
+
+  .social-icons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+      justify-content: center;
+    }
+
+    a {
+      color: $light-text-color;
+      font-size: 24px;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: $accent-color;
+      }
+    }
+  }
+}
+
+.footer-legal-attribution {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 10px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .tmdb-attribution {
+    color: $light-text-color;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .tmdb-logo {
+      height: 12px;
+    }
+  }
+
+  .copyright-info {
+    color: $light-text-color;
+    margin: 0;
+  }
 }
