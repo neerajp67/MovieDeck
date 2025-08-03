@@ -37,7 +37,12 @@ body {
       color: #fff;
 
       &.mat-button-toggle-checked {
+        color: #fff;
         background-color: #e50914;
+
+        mat-pseudo-checkbox {
+          --mat-minimal-pseudo-checkbox-selected-checkmark-color: #fff;
+        }
       }
     }
   }
