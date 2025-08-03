@@ -92,3 +92,14 @@ export interface Genre {
   id: number;
   name: string;
 }
+
+export interface TrailerItem {
+  id: number;
+  title: string;
+  posterPath: string | null;
+  trailerKey: string | null;
+  mediaType: TrailerCategory;
+  releaseDate?: string;
+}
+
+export type TrailerCategory = 'movie' | 'tv' | 'upcomming';
