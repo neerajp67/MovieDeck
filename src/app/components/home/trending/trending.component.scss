@@ -10,24 +10,28 @@
 .trending-header {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 
   h2 {
-    font-size: 1.8rem;
+    font-size: 1.3rem;
     font-weight: 500;
-    margin: 0 16px 0 0;
+    margin-right: 0.5rem;
   }
 
   mat-button-toggle-group {
-    border-radius: 20px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background: transparent;
+    background: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.1));
+    border: none;
+    width: auto;
+    height: auto;
+    flex-shrink: 0;
 
-    .mat-mdc-button-toggle {
-      font-size: 0.9rem;
-      padding: 0 16px;
-      line-height: 34px;
-      color: rgba(255, 255, 255, 0.7);
+    mat-button-toggle {
+      font-size: 0.8rem;
+      line-height: 0.5rem;
+      color: #fff;
 
-      &.mat-mdc-button-toggle-checked {
+      &.mat-button-toggle-checked {
         background-color: #e50914;
       }
     }
