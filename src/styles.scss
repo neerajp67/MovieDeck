@@ -216,3 +216,15 @@ body {
     text-overflow: ellipsis;
   }
 }
+
+// --- Material Design Styles --- */
+
+mat-icon{
+  color: #fff !important;
+}
+
+mat-chip {
+  .mat-mdc-chip-action-label {
+    color: #fff !important;
+  }
+}
