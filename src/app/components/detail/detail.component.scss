@@ -11,7 +11,7 @@
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  min-height: calc(100vh - 64px);
+  min-height: 100vh;
 
   &::before {
     content: '';
@@ -20,7 +20,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to right, rgba(10, 20, 30, 0.95) 20%, rgba(10, 20, 30, 0.7) 60%, rgba(10, 20, 30, 0.4) 100%);
+    background: rgba(0, 0, 0, 0.8);
     z-index: 1;
   }
 }
