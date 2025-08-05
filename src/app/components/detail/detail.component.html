@@ -48,15 +48,6 @@
           <span class="score-label">User Score</span>
         </div>
         <div class="action-buttons">
-          <button mat-icon-button aria-label="Add to list" matTooltip="Add to list (placeholder)">
-            <mat-icon>list</mat-icon>
-          </button>
-          <button mat-icon-button aria-label="Favorite" matTooltip="Favorite (placeholder)">
-            <mat-icon>favorite_border</mat-icon>
-          </button>
-          <button mat-icon-button aria-label="Bookmark" matTooltip="Bookmark (placeholder)">
-            <mat-icon>bookmark_border</mat-icon>
-          </button>
           <button *ngIf="mainTrailer" mat-flat-button class="play-trailer-button" (click)="openTrailer(mainTrailer)">
             <mat-icon>play_arrow</mat-icon> Play Trailer
           </button>

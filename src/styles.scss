@@ -6,6 +6,7 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  color: #fff;
 }
 
 .content-section {
@@ -192,7 +193,6 @@ body {
   padding: 10px;
   box-sizing: border-box;
   z-index: 3;
-  color: #ffffff;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 
   mat-card-title {
@@ -217,13 +217,16 @@ body {
   }
 }
 
-// --- Material Design Styles --- */
+/* --- Material Design Styles --- */
 
-mat-icon{
+mat-icon {
   color: #fff !important;
 }
 
-mat-chip {
+mat-chip.mat-mdc-chip {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 1rem;
+
   .mat-mdc-chip-action-label {
     color: #fff !important;
   }
