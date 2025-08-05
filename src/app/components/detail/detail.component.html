@@ -25,6 +25,10 @@
         </span>
       </h1>
 
+      <p class="original-title" *ngIf="mediaItem.original_title && mediaItem.original_title !== mediaItem.title">
+        Original Title: {{ mediaItem.original_title }}
+      </p>
+
       <div class="metadata-line">
         <span *ngIf="mediaType === 'movie' && mediaItem.release_date" class="release-date">
           {{ mediaItem.release_date | date:'MM/dd/yyyy' }} ({{ mediaItem.original_language.toUpperCase() }})
@@ -40,14 +44,34 @@
           </mat-chip-set>
         </span>
         <span *ngIf="mediaItem.runtime" class="runtime">{{ mediaItem.runtime }} min</span>
+        <span *ngIf="mediaItem.status" class="status">{{ mediaItem.status }}</span>
+      </div>
+
+      <div class="crew-section" *ngIf="credits">
+        <span class="crew-item" *ngIf="getDirectors().length > 0">
+          <h4>Directed by</h4>
+          <span *ngFor="let director of getDirectors(); let last = last">
+            {{ director.name }}{{ !last ? ', ' : '' }}
+          </span>
+        </span>
+        <span class="crew-item" *ngIf="getCreators().length > 0">
+          <h4>{{ mediaType === 'movie' ? 'Written by' : 'Created by' }}</h4>
+          <span *ngFor="let creator of getCreators(); let last = last">
+            {{ creator.name }}{{ !last ? ', ' : '' }}
+          </span>
+        </span>
       </div>
 
       <div class="actions-and-score">
         <div class="user-score" *ngIf="mediaItem.vote_average">
-          <span class="score-value">{{ mediaItem.vote_average * 10 | number:'1.0-0' }}%</span>
-          <span class="score-label">User Score</span>
+          <span class="score-value">{{ mediaItem.vote_average | number:'1.1-1' }} / 10</span>
+          <span class="score-label">TMDb Score ({{ mediaItem.vote_count | number }} votes)</span>
         </div>
         <div class="action-buttons">
+          <button *ngIf="mediaItem.homepage" mat-icon-button aria-label="Homepage" matTooltip="Visit Homepage"
+            (click)="openHomepage(mediaItem.homepage)">
+            <mat-icon>home</mat-icon>
+          </button>
           <button *ngIf="mainTrailer" mat-flat-button class="play-trailer-button" (click)="openTrailer(mainTrailer)">
             <mat-icon>play_arrow</mat-icon> Play Trailer
           </button>
@@ -61,21 +85,11 @@
         <p>{{ mediaItem.overview }}</p>
       </div>
 
-      <div class="crew-section" *ngIf="credits">
-        <div class="crew-list" *ngIf="getDirectors().length > 0">
-          <h4>Directed by</h4>
-          <span *ngFor="let director of getDirectors(); let last = last">
-            {{ director.name }}{{ !last ? ', ' : '' }}
-          </span>
-        </div>
-        <div class="crew-list" *ngIf="getCreators().length > 0">
-          <h4>{{ mediaType === 'movie' ? 'Written by' : 'Created by' }}</h4>
-          <span *ngFor="let creator of getCreators(); let last = last">
-            {{ creator.name }}{{ !last ? ', ' : '' }}
-          </span>
-        </div>
+      <div class="budget-revenue-section" *ngIf="mediaType === 'movie' && (mediaItem.budget || mediaItem.revenue)">
+        <h3>Financials</h3>
+        <p *ngIf="mediaItem.budget">Budget: {{ mediaItem.budget | currency:'USD' }}</p>
+        <p *ngIf="mediaItem.revenue">Revenue: {{ mediaItem.revenue | currency:'USD' }}</p>
       </div>
-
     </div>
   </div>
 </div>

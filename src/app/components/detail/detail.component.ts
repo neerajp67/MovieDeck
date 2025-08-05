@@ -1,17 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
+import { CommonModule, DatePipe, DecimalPipe, CurrencyPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { Subject, forkJoin, of } from 'rxjs';
 import { switchMap, takeUntil, catchError, map } from 'rxjs/operators';
 import { Movie, TvShow, CreditsResponse, CrewMember, TrailerItem } from '../../models/tmdb.model';
-import { TmdbApiService } from '../../services/api/tmdb-api.service'; import { MatTooltipModule } from '@angular/material/tooltip';
+import { TmdbApiService } from '../../services/api/tmdb-api.service';
 import { TrailerPlayerService } from '../../services/utils/trailer-player.service';
 
 @Component({
@@ -24,7 +25,8 @@ import { TrailerPlayerService } from '../../services/utils/trailer-player.servic
     MatChipsModule,
     MatTooltipModule,
     DatePipe,
-    DecimalPipe],
+    DecimalPipe,
+    CurrencyPipe], // Added CurrencyPipe
   templateUrl: './detail.component.html',
   styleUrl: './detail.component.scss'
 })
@@ -149,6 +151,12 @@ export class DetailComponent implements OnInit, OnDestroy {
       });
     } else {
       console.warn('No trailer key available for this item (should have been filtered out):', trailerItem.title);
+    }
+  }
+
+  openHomepage(url: string | null): void {
+    if (url) {
+      window.open(url, '_blank');
     }
   }
 
