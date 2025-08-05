@@ -1,4 +1,4 @@
-<div class="detail-page-wrapper">
+<div class="detail-page-wrapper" [ngStyle]="{'background-image': getBackdropImageUrl()}">
 
   <div class="backdrop-overlay"></div>
 
@@ -57,7 +57,7 @@
           <button mat-icon-button aria-label="Bookmark" matTooltip="Bookmark (placeholder)">
             <mat-icon>bookmark_border</mat-icon>
           </button>
-          <button *ngIf="mainTrailer" mat-flat-button class="play-trailer-button" (click)="openTrailerModal()">
+          <button *ngIf="mainTrailer" mat-flat-button class="play-trailer-button" (click)="openTrailer(mainTrailer)">
             <mat-icon>play_arrow</mat-icon> Play Trailer
           </button>
         </div>

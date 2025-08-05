@@ -4,7 +4,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Subject, Observable, switchMap, of, map, catchError, forkJoin, takeUntil, Subscription, fromEvent } from 'rxjs';
-import { TmdbResponse, Movie } from '../../../models/tmdb.model';
+import { TmdbResponse, Movie, TrailerCategory, TrailerItem } from '../../../models/tmdb.model';
 import { TmdbApiService } from '../../../services/api/tmdb-api.service';
 import { MatCardModule } from '@angular/material/card';
 import { TrailerPlayerService } from '../../../services/utils/trailer-player.service';
@@ -260,15 +260,4 @@ export class TrailersComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
-}
-
-export type TrailerCategory = 'movie' | 'tv' | 'upcomming';
-
-interface TrailerItem {
-  id: number;
-  title: string;
-  posterPath: string | null;
-  trailerKey: string | null;
-  mediaType: TrailerCategory;
-  releaseDate?: string;
 }

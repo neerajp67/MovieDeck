@@ -1,5 +1,5 @@
-<div class="trending-section">
-  <div class="trending-header">
+<div class="content-section">
+  <div class="content-header">
     <h2>Trending</h2>
     <mat-button-toggle-group [(ngModel)]="activeTimeWindow" (ngModelChange)="loadTrendingMovies()"
       aria-label="Time window selection">
@@ -8,15 +8,15 @@
     </mat-button-toggle-group>
   </div>
 
-  <div *ngIf="isLoading" class="loading-indicator">
+  <div *ngIf="isLoading" class="info-message">
     <mat-spinner diameter="50"></mat-spinner>
   </div>
 
-  <div *ngIf="errorMessage" class="error-message">
+  <div *ngIf="errorMessage" class="info-message error-message">
     <p>{{ errorMessage }}</p>
   </div>
 
-  <div *ngIf="!isLoading && !errorMessage && trendingMovies.length === 0" class="no-movies">
+  <div *ngIf="!isLoading && !errorMessage && trendingMovies.length === 0" class="info-message">
     <p>No trending movies found for {{ activeTimeWindow === 'day' ? 'today' : 'this week' }}.</p>
   </div>
 
@@ -30,15 +30,15 @@
 
     <div class="horizontal-scroll-container" (scroll)="onScroll()" #scrollContainer>
       <div class="scrollable-content" (mousedown)="onMouseDown($event)">
-        <mat-card *ngFor="let movie of trendingMovies" class="movie-card-item" (click)="navigateToDetails(movie.id)">
+        <mat-card *ngFor="let movie of trendingMovies" class="media-card-item" (click)="navigateToDetails(movie.id)">
           <img [src]="movieService.getFullImageUrl(movie.poster_path, 'w300')" [alt]="movie.title"
-            (error)="movie.poster_path=null" class="movie-card-background-image">
+            (error)="movie.poster_path=null" class="media-card-background-image">
 
-          <div class="movie-card-overlay"></div>
+          <div class="media-card-overlay"></div>
 
-          <mat-card-content class="movie-card-content">
-            <mat-card-title>{{ movie.title }}</mat-card-title>
-            <mat-card-subtitle *ngIf="movie.release_date">
+          <mat-card-content class="media-card-content">
+            <mat-card-title class="media-card-title">{{ movie.title }}</mat-card-title>
+            <mat-card-subtitle *ngIf="movie.release_date" class="media-card-subtitle">
               {{ movie.release_date | date:'MMM dd' }}
             </mat-card-subtitle>
           </mat-card-content>
