@@ -1,6 +1,7 @@
 export interface Movie {
   id: number;
   title: string;
+  original_title?: string;
   name: string;
   overview: string;
   poster_path: string | null;
@@ -20,6 +21,8 @@ export interface Movie {
   runtime?: number | null;
   status?: string;
   tagline?: string | null;
+  budget?: number;
+  revenue?: number;
 }
 
 export interface TmdbResponse<T = Movie> {
