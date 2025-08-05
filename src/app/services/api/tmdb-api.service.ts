@@ -152,4 +152,9 @@ export class TmdbApiService {
     return this.http.get<Genre[]>(genreUrl);
   }
 
+  getSimilarMedia(mediaType: string, mediaId: number): Observable<TmdbResponse<Movie>> {
+    const similarUrl = `${this.apiUrl}/${mediaType}/${mediaId}/similar`;
+    return this.http.get<TmdbResponse<Movie>>(similarUrl);
+  }
+
 }

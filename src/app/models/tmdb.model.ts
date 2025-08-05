@@ -7,6 +7,7 @@ export interface Movie {
   poster_path: string | null;
   backdrop_path: string | null;
   release_date: string;
+  first_air_date?: string;
   vote_average: number;
   popularity: number;
   original_language: string;
@@ -23,6 +24,7 @@ export interface Movie {
   tagline?: string | null;
   budget?: number;
   revenue?: number;
+  similar: (Movie | TvShow)[];
 }
 
 export interface TmdbResponse<T = Movie> {
