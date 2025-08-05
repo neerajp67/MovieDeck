@@ -14,6 +14,7 @@ import { switchMap, takeUntil, catchError, map } from 'rxjs/operators';
 import { Movie, TvShow, CreditsResponse, CrewMember, TrailerItem } from '../../models/tmdb.model';
 import { TmdbApiService } from '../../services/api/tmdb-api.service';
 import { TrailerPlayerService } from '../../services/utils/trailer-player.service';
+import { MediaCastComponent } from '../media-cast/media-cast.component';
 
 @Component({
   selector: 'app-detail',
@@ -26,7 +27,8 @@ import { TrailerPlayerService } from '../../services/utils/trailer-player.servic
     MatTooltipModule,
     DatePipe,
     DecimalPipe,
-    CurrencyPipe], // Added CurrencyPipe
+    CurrencyPipe,
+    MediaCastComponent],
   templateUrl: './detail.component.html',
   styleUrl: './detail.component.scss'
 })
