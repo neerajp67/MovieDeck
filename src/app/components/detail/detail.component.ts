@@ -14,6 +14,8 @@ import { switchMap, takeUntil, catchError, map } from 'rxjs/operators';
 import { Movie, TvShow, CreditsResponse, CrewMember, TrailerItem } from '../../models/tmdb.model';
 import { TmdbApiService } from '../../services/api/tmdb-api.service';
 import { TrailerPlayerService } from '../../services/utils/trailer-player.service';
+import { MediaCastComponent } from '../media-cast/media-cast.component';
+import { MediaSimilarComponent } from "../media-similar/media-similar.component";
 
 @Component({
   selector: 'app-detail',
@@ -26,7 +28,8 @@ import { TrailerPlayerService } from '../../services/utils/trailer-player.servic
     MatTooltipModule,
     DatePipe,
     DecimalPipe,
-    CurrencyPipe], // Added CurrencyPipe
+    CurrencyPipe,
+    MediaCastComponent, MediaSimilarComponent],
   templateUrl: './detail.component.html',
   styleUrl: './detail.component.scss'
 })
@@ -35,10 +38,12 @@ export class DetailComponent implements OnInit, OnDestroy {
   credits: CreditsResponse | null = null;
   mainTrailer: TrailerItem | null = null;
   trailerUrl: SafeResourceUrl | null = null;
+  similarItems: (Movie | TvShow)[] = [];
 
   isLoading: boolean = true;
   errorMessage: string | null = null;
   mediaType: 'movie' | 'tv' = 'movie';
+  mediaId: number | null = null;
 
   private destroy$ = new Subject<void>();
 
@@ -62,6 +67,7 @@ export class DetailComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           return of(null);
         }
+        this.mediaId = id;
         return this.fetchMediaDetails(id, this.mediaType);
       }),
       takeUntil(this.destroy$)
@@ -77,6 +83,8 @@ export class DetailComponent implements OnInit, OnDestroy {
           mediaType: this.mediaType,
           releaseDate: this.mediaItem?.release_date
         } as TrailerItem;
+
+        this.loadSimilarItems();
       }
     });
   }
@@ -116,6 +124,17 @@ export class DetailComponent implements OnInit, OnDestroy {
       })
     );
   }
+
+  loadSimilarItems(): void {
+    if (this.mediaId && this.mediaType) {
+      const similarObs = this.movieService.getSimilarMedia(this.mediaType, this.mediaId);
+      similarObs.pipe(takeUntil(this.destroy$))
+        .subscribe(response => {
+          this.similarItems = response.results;
+        });
+    }
+  }
+
 
   /**
    * Constructs the URL for the backdrop image.
