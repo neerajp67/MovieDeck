@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { TrailerPlayerModalComponent, TrailerModalData } from '../../shared/trailer-player-modal/trailer-player-modal.component';
+import { TrailerPlayerModalComponent, TrailerModalData } from '../../components/shared/trailer-player-modal/trailer-player-modal.component';
 
 @Injectable({
   providedIn: 'root'

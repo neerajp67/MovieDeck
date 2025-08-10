@@ -108,3 +108,12 @@ export interface TrailerItem {
 }
 
 export type TrailerCategory = 'movie' | 'tv' | 'upcomming';
+
+export interface Person {
+  id: number;
+  name: string;
+  known_for: (Movie | TvShow)[];
+  profile_path: string | null;
+  known_for_department: string;
+  popularity: number;
+}

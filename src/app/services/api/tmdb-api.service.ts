@@ -1,9 +1,11 @@
-// src/app/services/tmdb.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { CreditsResponse, Genre, Movie, TmdbResponse, TvShow, VideoResponse } from '../../models/tmdb.model';
+import { CreditsResponse, Genre, Movie, TmdbResponse, TvShow, VideoResponse, Person } from '../../models/tmdb.model';
 import { Observable } from 'rxjs';
+
+export type FilterType = 'bollywood' | 'hollywood';
+export type MediaType = 'movie' | 'tv' | 'person';
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +15,6 @@ export class TmdbApiService {
   public imageBaseUrl = environment.imageBaseUrl;
 
   constructor(private http: HttpClient) { }
-
-  // getFullImageUrl(path: string | null, size: string = 'w500'): string | null {
-  //   if (!path) {
-  //     return 'https://via.placeholder.com/500x750.png?text=No+Image';
-  //   }
-  //   return `${this.imageBaseUrl}${size}${path}`;
-  // }
 
   /**
   * Constructs the full image URL based on path and desired size.
@@ -157,4 +152,31 @@ export class TmdbApiService {
     return this.http.get<TmdbResponse<Movie>>(similarUrl);
   }
 
+  /**
+   * Fetches movies, tv shows, or people based on the selected filter.
+   * Uses TMDb's discovery and trending endpoints.
+   */
+  getFilteredMedia(mediaType: MediaType, filterType: FilterType, page: number): Observable<TmdbResponse<Movie | TvShow | Person>> {
+    let params = new HttpParams().set('page', page.toString()).set('sort_by', 'popularity.desc');
+    let endpoint: string;
+
+    if (filterType === 'bollywood') {
+      params = params.set('region', 'IN').set('with_original_language', 'hi');
+    } else { // 'hollywood'
+      params = params.set('region', 'US').set('with_original_language', 'en');
+    }
+
+    if (mediaType === 'movie') {
+      endpoint = 'discover/movie';
+    } else if (mediaType === 'tv') {
+      endpoint = 'discover/tv';
+    } else { // 'person'
+      // The discover endpoint for people does not support language or region.
+      // Trending is a more suitable alternative for a filtered list.
+      endpoint = `trending/person/week`;
+      params = params.set('language', params.get('with_original_language') || 'en');
+    }
+
+    return this.http.get<TmdbResponse<Movie | TvShow | Person>>(`${this.apiUrl}/${endpoint}`, { params });
+  }
 }
