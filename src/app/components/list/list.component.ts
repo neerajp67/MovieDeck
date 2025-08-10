@@ -15,7 +15,6 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list',
-  standalone: true,
   imports: [
     CommonModule,
     MatCardModule,
