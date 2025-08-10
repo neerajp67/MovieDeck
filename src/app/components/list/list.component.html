@@ -1,9 +1,9 @@
 <div class="list-container">
     <div class="content-header">
-        <mat-button-toggle-group [value]="selectedMediaType" (change)="selectMediaType($event.value)"
-            aria-label="Select media type">
-            <mat-button-toggle value="movie">Movies</mat-button-toggle>
-            <mat-button-toggle value="tv">TV Shows</mat-button-toggle>
+        <mat-button-toggle-group [value]="selectedFilter" (change)="selectFilter($event.value)"
+            aria-label="Select filter type">
+            <mat-button-toggle value="bollywood">Bollywood</mat-button-toggle>
+            <mat-button-toggle value="hollywood">Hollywood</mat-button-toggle>
         </mat-button-toggle-group>
     </div>
 
@@ -16,18 +16,23 @@
     </div>
 
     <div *ngIf="!isLoading && !errorMessage && mediaItems.length === 0" class="info-message">
-        <p>No {{ selectedMediaType === 'movie' ? 'movies' : 'TV shows' }} found.</p>
+        <p>No {{ selectedFilter }} {{ selectedMediaType }} found.</p>
     </div>
 
     <div class="media-grid" *ngIf="!isLoading && mediaItems.length > 0">
-        <mat-card *ngFor="let item of mediaItems" class="media-card-item" (click)="navigateToDetails(item.id)">
-            <img [src]="movieService.getFullImageUrl(item.poster_path, 'w300')" [alt]="item.title || item.name"
-                class="media-card-background-image">
+        <mat-card *ngFor="let item of mediaItems" class="media-card-item"
+            [ngClass]="{'person-card': selectedMediaType === 'person'}" (click)="navigateToDetails(item)">
+            <img [src]="movieService.getFullImageUrl(selectedMediaType === 'person' ? item?.profile_path : item?.poster_path, 'w300')"
+                [alt]="item.title || item.name" class="media-card-background-image"
+                (error)="selectedMediaType === 'person' ? item.profile_path = null : item.poster_path = null">
             <div class="media-card-overlay"></div>
             <mat-card-content class="media-card-content">
                 <mat-card-title class="media-card-title">{{ item?.title || item?.name }}</mat-card-title>
-                <mat-card-subtitle *ngIf="item.release_date" class="media-card-subtitle">
+                <mat-card-subtitle *ngIf="selectedMediaType !== 'person' && item.release_date" class="media-card-subtitle">
                     {{ item.release_date | date:'MMM dd' }}
+                </mat-card-subtitle>
+                <mat-card-subtitle *ngIf="selectedMediaType === 'person' && item.known_for_department" class="media-card-subtitle">
+                    {{ item.known_for_department }}
                 </mat-card-subtitle>
             </mat-card-content>
         </mat-card>
