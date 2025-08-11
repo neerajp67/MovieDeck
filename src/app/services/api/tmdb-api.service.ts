@@ -25,7 +25,7 @@ export class TmdbApiService {
   */
   getFullImageUrl(path: string | null, size: string = 'w500', type: 'backdrop' | 'poster' = 'backdrop'): string {
     if (!path) {
-      return 'https://via.placeholder.com/1280x720.png?text=No+Image'; // Placeholder for backdrop size
+      return 'assets/images/media_placeholder_image.png';
     }
 
     const screenWidth = window.innerWidth;

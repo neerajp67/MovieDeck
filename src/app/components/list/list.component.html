@@ -1,6 +1,6 @@
 <div class="list-container">
     <div class="content-header">
-        <mat-button-toggle-group [value]="selectedFilter" (change)="selectFilter($event.value)"
+        <mat-button-toggle-group *ngIf="selectedMediaType !== 'person'" [value]="selectedFilter" (change)="selectFilter($event.value)"
             aria-label="Select filter type">
             <mat-button-toggle value="bollywood">Bollywood</mat-button-toggle>
             <mat-button-toggle value="hollywood">Hollywood</mat-button-toggle>
@@ -22,7 +22,7 @@
     <div class="media-grid" *ngIf="!isLoading && mediaItems.length > 0">
         <mat-card *ngFor="let item of mediaItems" class="media-card-item"
             [ngClass]="{'person-card': selectedMediaType === 'person'}" (click)="navigateToDetails(item)">
-            <img [src]="movieService.getFullImageUrl(selectedMediaType === 'person' ? item?.profile_path : item?.poster_path, 'w300')"
+            <img [src]="getProfileImageUrl(item)"
                 [alt]="item.title || item.name" class="media-card-background-image"
                 (error)="selectedMediaType === 'person' ? item.profile_path = null : item.poster_path = null">
             <div class="media-card-overlay"></div>
