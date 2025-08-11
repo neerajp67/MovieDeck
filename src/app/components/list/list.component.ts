@@ -41,6 +41,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   selectedMediaType: MediaType = 'movie';
   selectedFilter: FilterType = 'bollywood';
+  placeholderImage: string = 'assets/images/placeholder_person.png';
 
   private destroy$ = new Subject<void>();
 
@@ -117,11 +118,18 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   navigateToDetails(item: Movie | Person | TvShow) {
+    if (this.selectedMediaType === 'person') return;
     if (item?.id) {
       this.router.navigate(['/', this.selectedMediaType, item.id]);
     } else {
       console.error('Cannot navigate to detail: item or item.id is missing', item);
     }
+  }
+
+  getProfileImageUrl(item: any): string {
+    if (this.selectedMediaType === 'person' && !item?.profile_path) return this.placeholderImage;
+
+    return this.movieService.getFullImageUrl(this.selectedMediaType === 'person' ? item?.profile_path : item?.poster_path, 'w300')
   }
 
   ngOnDestroy(): void {
