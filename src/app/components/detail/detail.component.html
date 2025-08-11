@@ -72,7 +72,8 @@
             (click)="openHomepage(mediaItem.homepage)">
             <mat-icon>home</mat-icon>
           </button>
-          <button *ngIf="mainTrailer" mat-flat-button class="play-trailer-button" (click)="openTrailer(mainTrailer)">
+          <button [class.disabled]="!mainTrailer?.trailerKey" mat-flat-button class="play-trailer-button"
+            (click)="openTrailer(mainTrailer)" [title]="!mainTrailer?.trailerKey ? 'No trailer available' : ''">
             <mat-icon>play_arrow</mat-icon> Play Trailer
           </button>
         </div>
