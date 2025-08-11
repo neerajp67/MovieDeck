@@ -234,3 +234,8 @@ mat-chip.mat-mdc-chip {
     color: #fff !important;
   }
 }
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+}

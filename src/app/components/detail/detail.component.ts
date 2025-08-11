@@ -79,7 +79,7 @@ export class DetailComponent implements OnInit, OnDestroy {
           id: this.mediaItem.id,
           title: this.mediaItem.title || this.mediaItem.name,
           posterPath: this.mediaItem.backdrop_path || this.mediaItem.poster_path,
-          trailerKey: result.trailer?.key || null,
+          trailerKey: result.trailer?.key || result?.videos?.results[0]?.key || null,
           mediaType: this.mediaType,
           releaseDate: this.mediaItem?.release_date
         } as TrailerItem;
