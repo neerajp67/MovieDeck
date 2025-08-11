@@ -38,12 +38,12 @@
         </mat-card>
     </div>
 
- <div class="pagination-controls" *ngIf="!isLoading && totalPages > 1">
-    <button mat-icon-button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" aria-label="Previous page">
+ <div class="pagination-controls scroll-wrapper" *ngIf="!isLoading && totalPages > 1">
+    <button mat-icon-button class="scroll-arrow left-arrow" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" aria-label="Previous page">
       <mat-icon>chevron_left</mat-icon>
     </button>
     <span>Page {{ currentPage }} of {{ totalPages }} ({{ totalResults }} results)</span>
-    <button mat-icon-button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" aria-label="Next page">
+    <button mat-icon-button class="scroll-arrow right-arrow" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" aria-label="Next page">
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>
