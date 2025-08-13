@@ -180,7 +180,7 @@ export class PopularComponent implements OnInit, OnDestroy {
 
   navigateToDetails(item: number) {
     if (item) {
-      this.router.navigate(['/', 'movie', item]);
+      this.router.navigate(['/', this.selectedCategory, item]);
     } else {
       console.error('Cannot navigate to detail: item or item.id is missing', item);
     }
