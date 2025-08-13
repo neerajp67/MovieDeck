@@ -51,7 +51,7 @@ export class TmdbApiService {
     return `${this.imageBaseUrl}${size}${path}`;
   }
 
-  getPopularMovies(page: number = 1, language: string = 'en-US', region: string = 'IN'): Observable<TmdbResponse<Movie>> {
+  getPopular(category: string, page: number = 1, language: string = 'en-US', region: string = 'IN'): Observable<TmdbResponse<Movie>> {
     const params = new HttpParams()
       .set('language', language)
       .set('page', page.toString())
@@ -60,7 +60,7 @@ export class TmdbApiService {
       .set('watch_region', region)
       .set('with_origin_country', region);
 
-    return this.http.get<TmdbResponse<Movie>>(`${this.apiUrl}/discover/movie`, { params });
+    return this.http.get<TmdbResponse<Movie>>(`${this.apiUrl}/discover/${category}`, { params });
   }
 
   getPopularTvShows(page: number = 1, language: string = 'en-US'): Observable<TmdbResponse<Movie>> {

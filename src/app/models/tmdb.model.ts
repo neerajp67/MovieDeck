@@ -109,6 +109,8 @@ export interface TrailerItem {
 
 export type TrailerCategory = 'movie' | 'tv' | 'upcomming';
 
+export type PopularCategory = 'movie' | 'tv';
+
 export interface Person {
   id: number;
   name: string;
