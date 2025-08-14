@@ -1,11 +1,13 @@
 export interface Movie {
   id: number;
   title: string;
+  original_title?: string;
   name: string;
   overview: string;
   poster_path: string | null;
   backdrop_path: string | null;
   release_date: string;
+  first_air_date?: string;
   vote_average: number;
   popularity: number;
   original_language: string;
@@ -20,6 +22,9 @@ export interface Movie {
   runtime?: number | null;
   status?: string;
   tagline?: string | null;
+  budget?: number;
+  revenue?: number;
+  similar: (Movie | TvShow)[];
 }
 
 export interface TmdbResponse<T = Movie> {
@@ -103,3 +108,14 @@ export interface TrailerItem {
 }
 
 export type TrailerCategory = 'movie' | 'tv' | 'upcomming';
+
+export type PopularCategory = 'movie' | 'tv';
+
+export interface Person {
+  id: number;
+  name: string;
+  known_for: (Movie | TvShow)[];
+  profile_path: string | null;
+  known_for_department: string;
+  popularity: number;
+}
