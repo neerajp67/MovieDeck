@@ -1,47 +1,49 @@
 <div class="list-container">
-    <div class="list-controls-bar">
-        <mat-button-toggle-group [value]="selectedMediaType" (change)="selectMediaType($event.value)"
-            aria-label="Select media type">
-            <mat-button-toggle value="movie">Movies</mat-button-toggle>
-            <mat-button-toggle value="tv">TV Shows</mat-button-toggle>
+    <div class="content-header">
+        <mat-button-toggle-group *ngIf="selectedMediaType !== 'person'" [value]="selectedFilter" (change)="selectFilter($event.value)"
+            aria-label="Select filter type">
+            <mat-button-toggle value="bollywood">Bollywood</mat-button-toggle>
+            <mat-button-toggle value="hollywood">Hollywood</mat-button-toggle>
         </mat-button-toggle-group>
-        <div class="filters-placeholder"></div>
     </div>
 
-    <div *ngIf="isLoading" class="loading-indicator">
+    <div *ngIf="isLoading" class="info-message">
         <mat-spinner diameter="50"></mat-spinner>
     </div>
 
-    <div *ngIf="errorMessage" class="error-message">
+    <div *ngIf="errorMessage" class="info-message error-message">
         <p>{{ errorMessage }}</p>
     </div>
 
-    <div *ngIf="!isLoading && !errorMessage && mediaItems.length === 0" class="no-items">
-        <p>No {{ selectedMediaType === 'movie' ? 'movies' : 'TV shows' }} found.</p>
+    <div *ngIf="!isLoading && !errorMessage && mediaItems.length === 0" class="info-message">
+        <p>No {{ selectedFilter }} {{ selectedMediaType }} found.</p>
     </div>
 
     <div class="media-grid" *ngIf="!isLoading && mediaItems.length > 0">
-        <mat-card *ngFor="let item of mediaItems" class="media-card" (click)="navigateToDetails(item.id)">
-            <img mat-card-image [src]="movieService.getFullImageUrl(item.poster_path, 'w300')" [alt]="item.title" মহারাজ
-                (error)="item.poster_path = null">
-            <mat-card-content>
-                <mat-card-title>{{ item?.title || item?.name }}</mat-card-title>
-                <mat-card-subtitle *ngIf="item.release_date">
+        <mat-card *ngFor="let item of mediaItems" class="media-card-item"
+            [ngClass]="{'person-card': selectedMediaType === 'person'}" (click)="navigateToDetails(item)">
+            <img [src]="getProfileImageUrl(item)"
+                [alt]="item.title || item.name" class="media-card-background-image"
+                (error)="selectedMediaType === 'person' ? item.profile_path = null : item.poster_path = null">
+            <div class="media-card-overlay"></div>
+            <mat-card-content class="media-card-content">
+                <mat-card-title class="media-card-title">{{ item?.title || item?.name }}</mat-card-title>
+                <mat-card-subtitle *ngIf="selectedMediaType !== 'person' && item.release_date" class="media-card-subtitle">
                     {{ item.release_date | date:'MMM dd' }}
                 </mat-card-subtitle>
-                <p class="media-rating" *ngIf="item.vote_average">
-                    Rating: {{ item.vote_average | number:'1.1-1' }}/10
-                </p>
+                <mat-card-subtitle *ngIf="selectedMediaType === 'person' && item.known_for_department" class="media-card-subtitle">
+                    {{ item.known_for_department }}
+                </mat-card-subtitle>
             </mat-card-content>
         </mat-card>
     </div>
 
- <div class="pagination-controls" *ngIf="!isLoading && totalPages > 1">
-    <button mat-icon-button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" aria-label="Previous page">
+ <div class="pagination-controls scroll-wrapper" *ngIf="!isLoading && totalPages > 1">
+    <button mat-icon-button class="scroll-arrow left-arrow" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" aria-label="Previous page">
       <mat-icon>chevron_left</mat-icon>
     </button>
     <span>Page {{ currentPage }} of {{ totalPages }} ({{ totalResults }} results)</span>
-    <button mat-icon-button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" aria-label="Next page">
+    <button mat-icon-button class="scroll-arrow right-arrow" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" aria-label="Next page">
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>

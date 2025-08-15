@@ -67,6 +67,10 @@ $mobile-menu-item-hover-bg: $hover-color;
       &.active-link {
         color: $accent-color;
         font-weight: 700;
+
+        mat-icon {
+          color: $accent-color !important;
+        }
       }
     }
   }

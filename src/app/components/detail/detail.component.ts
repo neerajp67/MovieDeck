@@ -1,18 +1,21 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
+import { CommonModule, DatePipe, DecimalPipe, CurrencyPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { Subject, forkJoin, of } from 'rxjs';
 import { switchMap, takeUntil, catchError, map } from 'rxjs/operators';
 import { Movie, TvShow, CreditsResponse, CrewMember, TrailerItem } from '../../models/tmdb.model';
-import { TmdbApiService } from '../../services/api/tmdb-api.service'; import { MatTooltipModule } from '@angular/material/tooltip';
+import { TmdbApiService } from '../../services/api/tmdb-api.service';
 import { TrailerPlayerService } from '../../services/utils/trailer-player.service';
+import { MediaCastComponent } from '../media-cast/media-cast.component';
+import { MediaSimilarComponent } from "../media-similar/media-similar.component";
 
 @Component({
   selector: 'app-detail',
@@ -24,7 +27,9 @@ import { TrailerPlayerService } from '../../services/utils/trailer-player.servic
     MatChipsModule,
     MatTooltipModule,
     DatePipe,
-    DecimalPipe],
+    DecimalPipe,
+    CurrencyPipe,
+    MediaCastComponent, MediaSimilarComponent],
   templateUrl: './detail.component.html',
   styleUrl: './detail.component.scss'
 })
@@ -33,10 +38,12 @@ export class DetailComponent implements OnInit, OnDestroy {
   credits: CreditsResponse | null = null;
   mainTrailer: TrailerItem | null = null;
   trailerUrl: SafeResourceUrl | null = null;
+  similarItems: (Movie | TvShow)[] = [];
 
   isLoading: boolean = true;
   errorMessage: string | null = null;
   mediaType: 'movie' | 'tv' = 'movie';
+  mediaId: number | null = null;
 
   private destroy$ = new Subject<void>();
 
@@ -60,6 +67,7 @@ export class DetailComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           return of(null);
         }
+        this.mediaId = id;
         return this.fetchMediaDetails(id, this.mediaType);
       }),
       takeUntil(this.destroy$)
@@ -71,10 +79,12 @@ export class DetailComponent implements OnInit, OnDestroy {
           id: this.mediaItem.id,
           title: this.mediaItem.title || this.mediaItem.name,
           posterPath: this.mediaItem.backdrop_path || this.mediaItem.poster_path,
-          trailerKey: result.trailer?.key || null,
+          trailerKey: result.trailer?.key || result?.videos?.results[0]?.key || null,
           mediaType: this.mediaType,
           releaseDate: this.mediaItem?.release_date
         } as TrailerItem;
+
+        this.loadSimilarItems();
       }
     });
   }
@@ -115,6 +125,17 @@ export class DetailComponent implements OnInit, OnDestroy {
     );
   }
 
+  loadSimilarItems(): void {
+    if (this.mediaId && this.mediaType) {
+      const similarObs = this.movieService.getSimilarMedia(this.mediaType, this.mediaId);
+      similarObs.pipe(takeUntil(this.destroy$))
+        .subscribe(response => {
+          this.similarItems = response.results;
+        });
+    }
+  }
+
+
   /**
    * Constructs the URL for the backdrop image.
    * @returns A string containing the URL for the backdrop image, or 'none' if no backdrop path is available.
@@ -149,6 +170,12 @@ export class DetailComponent implements OnInit, OnDestroy {
       });
     } else {
       console.warn('No trailer key available for this item (should have been filtered out):', trailerItem.title);
+    }
+  }
+
+  openHomepage(url: string | null): void {
+    if (url) {
+      window.open(url, '_blank');
     }
   }
 
