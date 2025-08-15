@@ -23,8 +23,6 @@ export class StoreService {
           console.error('Error loading genres:', error);
         }
       });
-    } else {
-      console.log('Genres already loaded in StoreService.');
     }
   }
 

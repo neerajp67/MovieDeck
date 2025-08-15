@@ -41,7 +41,6 @@ export class HeroComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(genres => {
         this.genres = genres;
-        console.log(this.genres);
       });
 
     this.loadMovies();
@@ -70,7 +69,6 @@ export class HeroComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.log('Error while fetching movies: ', error);
-
         }
       })
 
