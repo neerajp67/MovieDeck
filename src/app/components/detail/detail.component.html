@@ -31,10 +31,10 @@
 
       <div class="metadata-line">
         <span *ngIf="mediaType === 'movie' && mediaItem.release_date" class="release-date">
-          {{ mediaItem.release_date | date:'MM/dd/yyyy' }} ({{ mediaItem.original_language.toUpperCase() }})
+          {{ mediaItem.release_date | date:'MMM d y' }} ({{ mediaItem.original_language.toUpperCase() }})
         </span>
-        <span *ngIf="mediaType === 'tv' && mediaItem.release_date" class="release-date">
-          {{ mediaItem.release_date | date:'MM/dd/yyyy' }} ({{ mediaItem.original_language.toUpperCase() }})
+        <span *ngIf="mediaType === 'tv' && mediaItem.first_air_date" class="release-date">
+          {{ mediaItem.first_air_date | date:'MMM d y' }} ({{ mediaItem.original_language.toUpperCase() }})
         </span>
         <span *ngIf="mediaItem.genres && mediaItem.genres.length > 0" class="genres">
           <mat-chip-set aria-label="Genres">

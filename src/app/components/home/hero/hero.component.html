@@ -18,9 +18,9 @@
         <ng-container *ngIf="currentMovie">
           <h1 class="mat-display-2 fade-in-up">{{ currentMovie.title }}</h1>
           <p class="mat-body-1 fade-in-up delay-1">
-            {{ currentMovie.release_date | date: 'yyyy' }}
+            {{ currentMovie.release_date | date: 'MMM y' }}
             <span *ngIf="currentMovie.vote_average">
-              | {{ (currentMovie.vote_average * 10) | number: '1.0-0' }}% Match
+              | {{ currentMovie.vote_average | number: '1.1-1' }} / 10
             </span>
           </p>
           <p class="mat-body-2 fade-in-up delay-2 genres">

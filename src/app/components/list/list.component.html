@@ -1,7 +1,7 @@
 <div class="list-container">
     <div class="content-header">
-        <mat-button-toggle-group *ngIf="selectedMediaType !== 'person'" [value]="selectedFilter" (change)="selectFilter($event.value)"
-            aria-label="Select filter type">
+        <mat-button-toggle-group *ngIf="selectedMediaType !== 'person'" [value]="selectedFilter"
+            (change)="selectFilter($event.value)" aria-label="Select filter type">
             <mat-button-toggle value="bollywood">Bollywood</mat-button-toggle>
             <mat-button-toggle value="hollywood">Hollywood</mat-button-toggle>
         </mat-button-toggle-group>
@@ -22,29 +22,35 @@
     <div class="media-grid" *ngIf="!isLoading && mediaItems.length > 0">
         <mat-card *ngFor="let item of mediaItems" class="media-card-item"
             [ngClass]="{'person-card': selectedMediaType === 'person'}" (click)="navigateToDetails(item)">
-            <img [src]="getProfileImageUrl(item)"
-                [alt]="item.title || item.name" class="media-card-background-image"
+            <img [src]="getProfileImageUrl(item)" [alt]="item.title || item.name" class="media-card-background-image"
                 (error)="selectedMediaType === 'person' ? item.profile_path = null : item.poster_path = null">
             <div class="media-card-overlay"></div>
             <mat-card-content class="media-card-content">
                 <mat-card-title class="media-card-title">{{ item?.title || item?.name }}</mat-card-title>
-                <mat-card-subtitle *ngIf="selectedMediaType !== 'person' && item.release_date" class="media-card-subtitle">
-                    {{ item.release_date | date:'MMM dd' }}
+                <mat-card-subtitle *ngIf="selectedMediaType !== 'person' && (item.release_date || item.first_air_date)"
+                    class="media-card-subtitle">
+                    {{ item.release_date || item.first_air_date | date:'MMM y' }}
+                    <span *ngIf="item.vote_average">
+                        | {{ item.vote_average | number: '1.1-1' }}
+                    </span>
                 </mat-card-subtitle>
-                <mat-card-subtitle *ngIf="selectedMediaType === 'person' && item.known_for_department" class="media-card-subtitle">
+                <mat-card-subtitle *ngIf="selectedMediaType === 'person' && item.known_for_department"
+                    class="media-card-subtitle">
                     {{ item.known_for_department }}
                 </mat-card-subtitle>
             </mat-card-content>
         </mat-card>
     </div>
 
- <div class="pagination-controls scroll-wrapper" *ngIf="!isLoading && totalPages > 1">
-    <button mat-icon-button class="scroll-arrow left-arrow" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" aria-label="Previous page">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-    <span>Page {{ currentPage }} of {{ totalPages }} ({{ totalResults }} results)</span>
-    <button mat-icon-button class="scroll-arrow right-arrow" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" aria-label="Next page">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
-  </div>
+    <div class="pagination-controls scroll-wrapper" *ngIf="!isLoading && totalPages > 1">
+        <button mat-icon-button class="scroll-arrow left-arrow" (click)="goToPage(currentPage - 1)"
+            [disabled]="currentPage === 1" aria-label="Previous page">
+            <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span>Page {{ currentPage }} of {{ totalPages }} ({{ totalResults }} results)</span>
+        <button mat-icon-button class="scroll-arrow right-arrow" (click)="goToPage(currentPage + 1)"
+            [disabled]="currentPage === totalPages" aria-label="Next page">
+            <mat-icon>chevron_right</mat-icon>
+        </button>
+    </div>
 </div>

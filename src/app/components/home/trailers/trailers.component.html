@@ -42,6 +42,9 @@
             <mat-card-title class="media-card-title">{{ trailer.title }}</mat-card-title>
             <mat-card-subtitle *ngIf="trailer.releaseDate" class="media-card-subtitle">
               {{ trailer.releaseDate | date:'MMM d, y' }}
+              <span *ngIf="trailer.vote_average">
+                | {{ trailer.vote_average | number: '1.1-1' }}
+              </span>
             </mat-card-subtitle>
           </mat-card-content>
         </mat-card>
