@@ -19,8 +19,7 @@
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #mobileMenu="matMenu" class="mobile-menu-items">
-      <a *ngFor="let link of navLinks" mat-menu-item [routerLink]="link.path" (click)="$event.stopPropagation()"
-        routerLinkActive="active-link-mobile">
+      <a *ngFor="let link of navLinks" mat-menu-item [routerLink]="link.path" routerLinkActive="active-link-mobile">
         <mat-icon>{{ link.icon }}</mat-icon>
         <span>{{ link.label }}</span>
       </a>
