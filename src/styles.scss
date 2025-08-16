@@ -243,3 +243,45 @@ mat-chip.mat-mdc-chip {
 .trailer-player-backdrop {
   background: rgba(0, 0, 0, 0.8);
 }
+
+$breakpoint-desktop: 769px;
+$navbar-height: 2rem;
+
+$transparent-navbar-bg: rgba(0, 0, 0, 0.5);
+
+$text-color: #ffffff;
+$accent-color: #e50914;
+$hover-color: rgba(255, 255, 255, 0.1);
+
+$mobile-menu-bg: rgba(0, 0, 0, 0.8);
+$mobile-menu-item-text-color: $text-color;
+$mobile-menu-item-hover-bg: $hover-color;
+
+.mobile-menu-items {
+  background-color: $mobile-menu-bg !important;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4) !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+
+  a {
+    color: $mobile-menu-item-text-color !important;
+    height: $navbar-height;
+
+    mat-icon {
+      margin-right: 10px !important;
+    }
+
+    &:hover {
+      background-color: $mobile-menu-item-hover-bg !important;
+    }
+
+    &.active-link-mobile {
+      color: $accent-color !important;
+      font-weight: bold !important;
+
+      mat-icon {
+        color: $accent-color !important;
+      }
+    }
+  }
+}
