@@ -21,7 +21,10 @@
           <mat-card-content class="media-card-content">
             <mat-card-title class="media-card-title">{{ item.title || item.name }}</mat-card-title>
             <mat-card-subtitle *ngIf="item.release_date || item.first_air_date" class="media-card-subtitle">
-              {{ (item.release_date || item.first_air_date) | date:'MMM dd, y' }}
+              {{ (item.release_date || item.first_air_date) | date:'MMM y' }}
+              <span *ngIf="item.vote_average">
+                | {{ item.vote_average | number: '1.1-1' }}
+              </span>
             </mat-card-subtitle>
           </mat-card-content>
         </mat-card>

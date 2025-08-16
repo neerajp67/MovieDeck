@@ -105,6 +105,7 @@ export interface TrailerItem {
   trailerKey: string | null;
   mediaType: TrailerCategory;
   releaseDate?: string;
+  vote_average: number;
 }
 
 export type TrailerCategory = 'movie' | 'tv' | 'upcomming';

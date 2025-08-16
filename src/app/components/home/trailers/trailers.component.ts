@@ -92,7 +92,8 @@ export class TrailersComponent implements OnInit, OnDestroy {
                 posterPath: item.backdrop_path || item.poster_path,
                 trailerKey: officialTrailer ? officialTrailer.key : null,
                 mediaType: this.selectedCategory,
-                releaseDate: item?.release_date
+                releaseDate: item?.release_date,
+                vote_average: item?.vote_average
               } as TrailerItem;
             }),
             catchError(() => of({
