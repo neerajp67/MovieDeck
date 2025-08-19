@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Subject, Observable, switchMap, of, map, catchError, forkJoin, takeUntil, Subscription, fromEvent } from 'rxjs';
+import { Subject, Observable, switchMap, of, map, catchError, forkJoin, takeUntil } from 'rxjs';
 import { TmdbResponse, Movie, TrailerCategory, TrailerItem } from '../../../models/tmdb.model';
 import { TmdbApiService } from '../../../services/api/tmdb-api.service';
 import { MatCardModule } from '@angular/material/card';
 import { TrailerPlayerService } from '../../../services/utils/trailer-player.service';
+import { HorizontalScrollComponent } from "../../shared/horizontal-scroll/horizontal-scroll.component";
 
 @Component({
   selector: 'app-trailers',
@@ -16,7 +17,8 @@ import { TrailerPlayerService } from '../../../services/utils/trailer-player.ser
     MatButtonToggleModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatCardModule
+    MatCardModule,
+    HorizontalScrollComponent
   ],
   templateUrl: './trailers.component.html',
   styleUrl: './trailers.component.scss',
@@ -29,17 +31,6 @@ export class TrailersComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
   errorMessage: string | null = null;
   selectedCategory: TrailerCategory = 'movie';
-
-  showArrows: boolean = false;
-  canScrollLeft: boolean = false;
-  canScrollRight: boolean = false;
-
-  private isDragging = false;
-  private startX = 0;
-  private currentScrollLeftPosition = 0;
-
-  private mouseMoveSubscription: Subscription | null = null;
-  private mouseUpSubscription: Subscription | null = null;
 
   private destroy$ = new Subject<void>();
 
@@ -118,13 +109,6 @@ export class TrailersComponent implements OnInit, OnDestroy {
           this.errorMessage = `No ${this.selectedCategory} trailers found.`;
         }
         requestAnimationFrame(() => {
-          this.updateScrollArrowVisibility();
-          if (this.trailers.length > 3) {
-            this.canScrollRight = true;
-          } else {
-            this.canScrollRight = false;
-          }
-          this.canScrollLeft = false;
           this.cdr.detectChanges();
         });
       },
@@ -140,100 +124,6 @@ export class TrailersComponent implements OnInit, OnDestroy {
     if (this.selectedCategory !== category) {
       this.selectedCategory = category;
       this.loadTrailers();
-    }
-  }
-
-  onMouseDown(event: MouseEvent): void {
-    if (!this.scrollContainer || event.button !== 0) return;
-
-    this.isDragging = true;
-    this.startX = event.pageX - this.scrollContainer.nativeElement.offsetLeft;
-    this.currentScrollLeftPosition = this.scrollContainer.nativeElement.scrollLeft;
-
-    this.cancelDragSubscriptions();
-
-    this.mouseUpSubscription = fromEvent(document, 'mouseup').subscribe(() => this.onMouseUp());
-    this.mouseMoveSubscription = fromEvent(document, 'mousemove').subscribe((e: Event) => this.onMouseMove(e as MouseEvent));
-
-    event.preventDefault();
-    this.scrollContainer.nativeElement.style.cursor = 'grabbing';
-  }
-
-  onMouseMove(event: MouseEvent): void {
-    if (!this.isDragging || !this.scrollContainer) return;
-
-    event.preventDefault();
-    const x = event.pageX - this.scrollContainer.nativeElement.offsetLeft;
-    const walk = (x - this.startX) * 1.5;
-    this.scrollContainer.nativeElement.scrollLeft = this.currentScrollLeftPosition - walk;
-    this.updateScrollArrowVisibility();
-  }
-
-  onMouseUp(): void {
-    this.isDragging = false;
-    if (this.scrollContainer) {
-      this.scrollContainer.nativeElement.style.cursor = 'grab';
-    }
-    this.cancelDragSubscriptions();
-  }
-
-  private cancelDragSubscriptions(): void {
-    if (this.mouseUpSubscription) {
-      this.mouseUpSubscription.unsubscribe();
-      this.mouseUpSubscription = null;
-    }
-    if (this.mouseMoveSubscription) {
-      this.mouseMoveSubscription.unsubscribe();
-      this.mouseMoveSubscription = null;
-    }
-  }
-
-  onScrollWrapperMouseEnter(): void {
-    this.showArrows = true;
-    this.updateScrollArrowVisibility();
-    this.cdr.detectChanges();
-  }
-
-  onScrollWrapperMouseLeave(): void {
-    this.showArrows = false;
-    this.cdr.detectChanges();
-  }
-
-  onScroll(): void {
-    this.updateScrollArrowVisibility();
-  }
-
-  private updateScrollArrowVisibility(): void {
-    if (!this.scrollContainer?.nativeElement) {
-      this.canScrollLeft = false;
-      this.canScrollRight = false;
-      this.cdr.detectChanges();
-      return;
-    }
-
-    const element = this.scrollContainer.nativeElement;
-    const scrollLeft = element.scrollLeft;
-    const scrollWidth = element.scrollWidth;
-    const clientWidth = element.clientWidth;
-
-    this.canScrollLeft = scrollLeft > 0;
-    this.canScrollRight = Math.ceil(scrollLeft + clientWidth) < scrollWidth;
-    this.cdr.detectChanges();
-  }
-
-  scrollContentLeft(): void {
-    if (this.scrollContainer) {
-      const scrollAmount = this.scrollContainer.nativeElement.clientWidth * 0.7;
-      this.scrollContainer.nativeElement.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-      setTimeout(() => this.updateScrollArrowVisibility(), 600);
-    }
-  }
-
-  scrollRight(): void {
-    if (this.scrollContainer) {
-      const scrollAmount = this.scrollContainer.nativeElement.clientWidth * 0.7;
-      this.scrollContainer.nativeElement.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-      setTimeout(() => this.updateScrollArrowVisibility(), 600);
     }
   }
 
@@ -257,7 +147,6 @@ export class TrailersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.cancelDragSubscriptions();
     this.destroy$.next();
     this.destroy$.complete();
   }

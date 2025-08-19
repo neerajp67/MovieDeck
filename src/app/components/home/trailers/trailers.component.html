@@ -21,39 +21,25 @@
     <p>No trailers found for this selection.</p>
   </div>
 
-  <div class="scroll-wrapper" (mouseenter)="onScrollWrapperMouseEnter()" (mouseleave)="onScrollWrapperMouseLeave()"
-    *ngIf="!isLoading && trailers.length > 0">
+  <app-horizontal-scroll *ngIf="!isLoading && trailers.length > 0">
+    <ng-container *ngFor="let trailer of trailers">
+      <mat-card *ngFor="let trailer of trailers" class="media-card-item" (click)="openTrailer(trailer)">
+        <img [src]="getYouTubeThumbnail(trailer.trailerKey)" [alt]="trailer.title + ' trailer thumbnail'"
+          class="media-card-background-image">
+        <mat-icon class="play-icon">play_circle_filled</mat-icon>
 
-    <button mat-icon-button class="scroll-arrow left-arrow" *ngIf="showArrows && canScrollLeft"
-      (click)="scrollContentLeft()">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
+        <div class="media-card-overlay"></div>
 
-    <div class="horizontal-scroll-container" (scroll)="onScroll()" #scrollContainer>
-      <div class="scrollable-content" (mousedown)="onMouseDown($event)">
-        <mat-card *ngFor="let trailer of trailers" class="media-card-item" (click)="openTrailer(trailer)">
-          <img [src]="getYouTubeThumbnail(trailer.trailerKey)" [alt]="trailer.title + ' trailer thumbnail'"
-            class="media-card-background-image">
-          <mat-icon class="play-icon">play_circle_filled</mat-icon>
-          
-          <div class="media-card-overlay"></div>
-
-          <mat-card-content class="media-card-content">
-            <mat-card-title class="media-card-title">{{ trailer.title }}</mat-card-title>
-            <mat-card-subtitle *ngIf="trailer.releaseDate" class="media-card-subtitle">
-              {{ trailer.releaseDate | date:'MMM d, y' }}
-              <span *ngIf="trailer.vote_average">
-                | {{ trailer.vote_average | number: '1.1-1' }}
-              </span>
-            </mat-card-subtitle>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div>
-
-    <button mat-icon-button class="scroll-arrow right-arrow" *ngIf="showArrows && canScrollRight"
-      (click)="scrollRight()">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
-  </div>
+        <mat-card-content class="media-card-content">
+          <mat-card-title class="media-card-title">{{ trailer.title }}</mat-card-title>
+          <mat-card-subtitle *ngIf="trailer.releaseDate" class="media-card-subtitle">
+            {{ trailer.releaseDate | date:'MMM d, y' }}
+            <span *ngIf="trailer.vote_average">
+              | {{ trailer.vote_average | number: '1.1-1' }}
+            </span>
+          </mat-card-subtitle>
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+  </app-horizontal-scroll>
 </section>
