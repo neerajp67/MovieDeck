@@ -1,0 +1,16 @@
+<mat-card class="media-card-item" (click)="navigateToDetails()" (keyPress)="navigateToDetails()">
+    <img [src]="movieService.getFullImageUrl(media().poster_path, 'w300')" [alt]="media().title"
+        (error)="media().poster_path=null" class="media-card-background-image">
+
+    <div class="media-card-overlay"></div>
+
+    <mat-card-content class="media-card-content">
+        <mat-card-title class="media-card-title">{{ media().title}}</mat-card-title>
+        <mat-card-subtitle *ngIf="media().release_date" class="media-card-subtitle">
+            {{ media().release_date | date:'MMM y' }}
+            <span *ngIf="media().vote_average">
+                | {{ media().vote_average | number: '1.1-1' }}
+            </span>
+        </mat-card-subtitle>
+    </mat-card-content>
+</mat-card>

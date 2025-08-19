@@ -23,7 +23,7 @@
 
   <app-horizontal-scroll *ngIf="!isLoading && trailers.length > 0">
     <ng-container *ngFor="let trailer of trailers">
-      <mat-card *ngFor="let trailer of trailers" class="media-card-item" (click)="openTrailer(trailer)">
+      <mat-card class="media-card-item" (click)="openTrailer(trailer)">
         <img [src]="getYouTubeThumbnail(trailer.trailerKey)" [alt]="trailer.title + ' trailer thumbnail'"
           class="media-card-background-image">
         <mat-icon class="play-icon">play_circle_filled</mat-icon>

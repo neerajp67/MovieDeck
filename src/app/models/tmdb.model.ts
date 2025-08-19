@@ -120,3 +120,12 @@ export interface Person {
   known_for_department: string;
   popularity: number;
 }
+
+export interface MediaCard {
+  id: number;
+  title: string;
+  poster_path: string | null;
+  release_date: string | null | undefined;
+  vote_average: number;
+  media_type?: 'movie' | 'tv';
+}
