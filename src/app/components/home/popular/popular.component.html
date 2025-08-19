@@ -19,39 +19,21 @@
   <div *ngIf="!isLoading && !errorMessage && popularMedia.length === 0" class="info-message">
     <p>No popular media found for {{ selectedCategory === 'movie' ? 'movie' : 'tv' }}.</p>
   </div>
+  <app-horizontal-scroll *ngIf="!isLoading && popularMedia.length > 0">
+    <mat-card *ngFor="let media of popularMedia" class="media-card-item" (click)="navigateToDetails(media.id)">
+      <img [src]="movieService.getFullImageUrl(media.poster_path, 'w300')" [alt]="media.title"
+        (error)="media.poster_path=null" class="media-card-background-image">
 
-  <div class="scroll-wrapper" (mouseenter)="onScrollWrapperMouseEnter()" (mouseleave)="onScrollWrapperMouseLeave()"
-    *ngIf="!isLoading && popularMedia.length > 0">
+      <div class="media-card-overlay"></div>
 
-    <button mat-icon-button class="scroll-arrow left-arrow" *ngIf="showArrows && canScrollLeft"
-      (click)="scrollContentLeft()">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-
-    <div class="horizontal-scroll-container" (scroll)="onScroll()" #scrollContainer>
-      <div class="scrollable-content" (mousedown)="onMouseDown($event)">
-        <mat-card *ngFor="let media of popularMedia" class="media-card-item" (click)="navigateToDetails(media.id)">
-          <img [src]="movieService.getFullImageUrl(media.poster_path, 'w300')" [alt]="media.title"
-            (error)="media.poster_path=null" class="media-card-background-image">
-
-          <div class="media-card-overlay"></div>
-
-          <mat-card-content class="media-card-content">
-            <mat-card-title class="media-card-title">{{ media.title || media.name }}</mat-card-title>
-            <mat-card-subtitle *ngIf="media.release_date || media.first_air_date" class="media-card-subtitle">
-              {{ media.release_date || media.first_air_date | date:'MMM y' }}
-              <span *ngIf="media.vote_average">
-                | {{ media.vote_average | number: '1.1-1' }}
-              </span>
-            </mat-card-subtitle>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div>
-
-    <button mat-icon-button class="scroll-arrow right-arrow" *ngIf="showArrows && canScrollRight"
-      (click)="scrollRight()">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
-  </div>
-</div>
+      <mat-card-content class="media-card-content">
+        <mat-card-title class="media-card-title">{{ media.title || media.name }}</mat-card-title>
+        <mat-card-subtitle *ngIf="media.release_date || media.first_air_date" class="media-card-subtitle">
+          {{ media.release_date || media.first_air_date | date:'MMM y' }}
+          <span *ngIf="media.vote_average">
+            | {{ media.vote_average | number: '1.1-1' }}
+          </span>
+        </mat-card-subtitle>
+      </mat-card-content>
+    </mat-card>
+  </app-horizontal-scroll>
