@@ -22,22 +22,7 @@
 
   <app-horizontal-scroll *ngIf="!isLoading && trendingMovies.length > 0">
     <ng-container *ngFor="let movie of trendingMovies">
-      <mat-card class="media-card-item" (click)="navigateToDetails(movie.id)">
-        <img [src]="movieService.getFullImageUrl(movie.poster_path, 'w300')" [alt]="movie.title"
-          (error)="movie.poster_path=null" class="media-card-background-image">
-
-        <div class="media-card-overlay"></div>
-
-        <mat-card-content class="media-card-content">
-          <mat-card-title class="media-card-title">{{ movie.title }}</mat-card-title>
-          <mat-card-subtitle *ngIf="movie.release_date" class="media-card-subtitle">
-            {{ movie.release_date | date:'MMM y' }}
-            <span *ngIf="movie.vote_average">
-              | {{ movie.vote_average | number: '1.1-1' }}
-            </span>
-          </mat-card-subtitle>
-        </mat-card-content>
-      </mat-card>
+      <app-media-card [media]="getMedia(movie)"></app-media-card>
     </ng-container>
   </app-horizontal-scroll>
 </section>

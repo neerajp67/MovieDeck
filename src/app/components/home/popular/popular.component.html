@@ -22,22 +22,7 @@
 
   <app-horizontal-scroll *ngIf="!isLoading && popularMedia.length > 0">
     <ng-container *ngFor="let media of popularMedia">
-      <mat-card class="media-card-item" (click)="navigateToDetails(media.id)">
-        <img [src]="movieService.getFullImageUrl(media.poster_path, 'w300')" [alt]="media.title"
-          (error)="media.poster_path=null" class="media-card-background-image">
-
-        <div class="media-card-overlay"></div>
-
-        <mat-card-content class="media-card-content">
-          <mat-card-title class="media-card-title">{{ media.title || media.name }}</mat-card-title>
-          <mat-card-subtitle *ngIf="media.release_date || media.first_air_date" class="media-card-subtitle">
-            {{ media.release_date || media.first_air_date | date:'MMM y' }}
-            <span *ngIf="media.vote_average">
-              | {{ media.vote_average | number: '1.1-1' }}
-            </span>
-          </mat-card-subtitle>
-        </mat-card-content>
-      </mat-card>
+      <app-media-card [media]="getMedia(media)"></app-media-card>
     </ng-container>
   </app-horizontal-scroll>
 </section>

@@ -7,10 +7,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
-import { Movie, PopularCategory, TmdbResponse } from '../../../models/tmdb.model';
+import { MediaCard, Movie, PopularCategory, TmdbResponse } from '../../../models/tmdb.model';
 import { TmdbApiService } from '../../../services/api/tmdb-api.service';
-import { Router } from '@angular/router';
 import { HorizontalScrollComponent } from '../../shared/horizontal-scroll/horizontal-scroll.component';
+import { MediaCardComponent } from "../../shared/media-card/media-card.component";
 
 @Component({
   selector: 'app-popular',
@@ -21,8 +21,7 @@ import { HorizontalScrollComponent } from '../../shared/horizontal-scroll/horizo
     MatProgressSpinnerModule,
     MatIconModule,
     MatButtonToggleModule,
-    HorizontalScrollComponent
-  ],
+    HorizontalScrollComponent, MediaCardComponent],
   templateUrl: './popular.component.html',
   styleUrl: './popular.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -36,7 +35,6 @@ export class PopularComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
   constructor(public movieService: TmdbApiService,
-    private readonly router: Router,
     private readonly cdr: ChangeDetectorRef
   ) { }
 
@@ -64,12 +62,16 @@ export class PopularComponent implements OnInit, OnDestroy {
         }
       });
   }
-  navigateToDetails(item: number) {
-    if (item) {
-      this.router.navigate(['/', this.selectedCategory, item]);
-    } else {
-      console.error('Cannot navigate to detail: item or item.id is missing', item);
-    }
+
+  getMedia(media: Movie): MediaCard {
+    return {
+      id: media.id,
+      title: media.title || media.name,
+      poster_path: media.poster_path,
+      release_date: media.release_date || media.first_air_date,
+      vote_average: media.vote_average,
+      media_type: this.selectedCategory
+    };
   }
 
   ngOnDestroy(): void {

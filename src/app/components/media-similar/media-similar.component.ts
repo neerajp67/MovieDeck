@@ -1,6 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,13 +8,20 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { Subject } from 'rxjs';
 import { TmdbApiService } from '../../services/api/tmdb-api.service';
-import { Movie, TvShow } from '../../models/tmdb.model';
+import { MediaCard, Movie, TvShow } from '../../models/tmdb.model';
 import { HorizontalScrollComponent } from "../shared/horizontal-scroll/horizontal-scroll.component";
+import { MediaCardComponent } from "../shared/media-card/media-card.component";
 
 @Component({
   selector: 'app-media-similar',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatTooltipModule, HorizontalScrollComponent],
+  imports: [CommonModule,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    HorizontalScrollComponent,
+    MediaCardComponent],
   templateUrl: './media-similar.component.html',
   styleUrls: ['./media-similar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -28,15 +34,17 @@ export class MediaSimilarComponent implements OnDestroy {
 
   constructor(
     public movieService: TmdbApiService,
-    private readonly router: Router
   ) { }
 
-  navigateToDetails(id: number): void {
-    if (id) {
-      this.router.navigate(['/', this.mediaType, id]);
-    } else {
-      console.error('Cannot navigate to detail: item id is missing.');
-    }
+  getMedia(media: Movie): MediaCard {
+    return {
+      id: media.id,
+      title: media.title || media.name,
+      poster_path: media.poster_path,
+      release_date: media.release_date || media.first_air_date,
+      vote_average: media.vote_average,
+      media_type: this.mediaType
+    };
   }
 
   ngOnDestroy(): void {
