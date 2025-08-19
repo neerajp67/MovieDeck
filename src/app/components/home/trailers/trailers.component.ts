@@ -25,8 +25,6 @@ import { HorizontalScrollComponent } from "../../shared/horizontal-scroll/horizo
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrailersComponent implements OnInit, OnDestroy {
-  @ViewChild('scrollContainer') scrollContainer!: ElementRef<HTMLDivElement>;
-
   trailers: TrailerItem[] = [];
   isLoading: boolean = true;
   errorMessage: string | null = null;

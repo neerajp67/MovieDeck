@@ -28,8 +28,6 @@ import { HorizontalScrollComponent } from "../../shared/horizontal-scroll/horizo
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrendingComponent implements OnInit, OnDestroy {
-  @ViewChild('scrollContainer') scrollContainer!: ElementRef<HTMLDivElement>;
-
   trendingMovies: Movie[] = [];
   isLoading: boolean = true;
   errorMessage: string | null = null;

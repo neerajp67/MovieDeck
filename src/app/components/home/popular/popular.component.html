@@ -19,6 +19,7 @@
   <div *ngIf="!isLoading && !errorMessage && popularMedia.length === 0" class="info-message">
     <p>No popular media found for {{ selectedCategory === 'movie' ? 'movie' : 'tv' }}.</p>
   </div>
+  
   <app-horizontal-scroll *ngIf="!isLoading && popularMedia.length > 0">
     <mat-card *ngFor="let media of popularMedia" class="media-card-item" (click)="navigateToDetails(media.id)">
       <img [src]="movieService.getFullImageUrl(media.poster_path, 'w300')" [alt]="media.title"
