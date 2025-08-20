@@ -1,5 +1,4 @@
-import { NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Subscription, Subject, fromEvent } from 'rxjs';
@@ -8,7 +7,7 @@ import { Subscription, Subject, fromEvent } from 'rxjs';
   selector: 'app-horizontal-scroll',
   imports: [MatIconModule,
     MatButtonModule,
-    NgIf],
+  ],
   templateUrl: './horizontal-scroll.component.html',
   styleUrl: './horizontal-scroll.component.scss'
 })

@@ -9,37 +9,47 @@
     </mat-button-toggle-group>
   </div>
 
-  <div *ngIf="isLoading" class="info-message">
+  @if (isLoading) {
+  <div class="info-message">
     <mat-spinner diameter="50"></mat-spinner>
   </div>
+  }
 
-  <div *ngIf="errorMessage && !isLoading" class="info-message error-message">
+  @if (errorMessage && !isLoading) {
+  <div class="info-message error-message">
     <p>{{ errorMessage }}</p>
   </div>
+  }
 
-  <div *ngIf="!isLoading && !errorMessage && trailers.length === 0" class="info-message">
+  @if (!isLoading && !errorMessage && trailers.length === 0) {
+  <div class="info-message">
     <p>No trailers found for this selection.</p>
   </div>
+  }
 
-  <app-horizontal-scroll *ngIf="!isLoading && trailers.length > 0">
-    <ng-container *ngFor="let trailer of trailers">
-      <mat-card class="media-card-item" (click)="openTrailer(trailer)">
-        <img [src]="getYouTubeThumbnail(trailer.trailerKey)" [alt]="trailer.title + ' trailer thumbnail'"
-          class="media-card-background-image">
-        <mat-icon class="play-icon">play_circle_filled</mat-icon>
+  @if (!isLoading && trailers.length > 0) {
+  <app-horizontal-scroll>
+    @for (trailer of trailers; track $index) {
+    <mat-card class="media-card-item" (click)="openTrailer(trailer)">
+      <img [src]="getYouTubeThumbnail(trailer.trailerKey)" [alt]="trailer.title + ' trailer thumbnail'"
+        class="media-card-background-image">
+      <mat-icon class="play-icon">play_circle_filled</mat-icon>
 
-        <div class="media-card-overlay"></div>
+      <div class="media-card-overlay"></div>
 
-        <mat-card-content class="media-card-content">
-          <mat-card-title class="media-card-title">{{ trailer.title }}</mat-card-title>
-          <mat-card-subtitle *ngIf="trailer.releaseDate" class="media-card-subtitle">
-            {{ trailer.releaseDate | date:'MMM d, y' }}
-            <span *ngIf="trailer.vote_average">
-              | {{ trailer.vote_average | number: '1.1-1' }}
-            </span>
-          </mat-card-subtitle>
-        </mat-card-content>
-      </mat-card>
-    </ng-container>
+      <mat-card-content class="media-card-content">
+        <mat-card-title class="media-card-title">{{ trailer.title }}</mat-card-title>
+        @if (trailer.releaseDate) {
+        <mat-card-subtitle class="media-card-subtitle">
+          {{ trailer.releaseDate | date:'MMM d, y' }}
+          @if(trailer.vote_average) {
+          | {{ trailer.vote_average | number: '1.1-1' }}
+          }
+        </mat-card-subtitle>
+        }
+      </mat-card-content>
+    </mat-card>
+    }
   </app-horizontal-scroll>
+  }
 </section>

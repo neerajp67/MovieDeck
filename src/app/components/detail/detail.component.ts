@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule, DatePipe, DecimalPipe, CurrencyPipe } from '@angular/common';
+import { DatePipe, DecimalPipe, CurrencyPipe, NgStyle } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SafeResourceUrl } from '@angular/platform-browser';
 
@@ -19,7 +19,7 @@ import { MediaSimilarComponent } from "../media-similar/media-similar.component"
 
 @Component({
   selector: 'app-detail',
-  imports: [CommonModule,
+  imports: [
     RouterLink,
     MatProgressSpinnerModule,
     MatIconModule,
@@ -29,7 +29,10 @@ import { MediaSimilarComponent } from "../media-similar/media-similar.component"
     DatePipe,
     DecimalPipe,
     CurrencyPipe,
-    MediaCastComponent, MediaSimilarComponent],
+    NgStyle,
+    MediaCastComponent,
+    MediaSimilarComponent
+  ],
   templateUrl: './detail.component.html',
   styleUrl: './detail.component.scss'
 })
@@ -173,7 +176,7 @@ export class DetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  openHomepage(url: string | null): void {
+  openHomepage(url: string): void {
     if (url) {
       window.open(url, '_blank');
     }

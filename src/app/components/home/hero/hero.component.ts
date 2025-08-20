@@ -3,17 +3,19 @@ import { TmdbApiService } from '../../../services/api/tmdb-api.service';
 import { StoreService } from '../../../services/utils/store.service';
 import { interval, Subject, Subscription, takeUntil } from 'rxjs';
 import { Genre, Movie } from '../../../models/tmdb.model';
-import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { DatePipe, DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-hero',
   imports: [
-    CommonModule,
     MatButtonModule,
-    MatIconModule],
+    MatIconModule,
+    DatePipe,
+    DecimalPipe
+  ],
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.scss'
 })
@@ -30,7 +32,7 @@ export class HeroComponent implements OnInit, OnDestroy {
   private imageLoadTimeout: any;
 
   movieService = inject(TmdbApiService)
-  constructor(private storeService: StoreService, 
+  constructor(private storeService: StoreService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {

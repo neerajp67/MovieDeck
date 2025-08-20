@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,7 +10,7 @@ import { HorizontalScrollComponent } from '../shared/horizontal-scroll/horizonta
 @Component({
   selector: 'app-media-cast',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
     MatCardModule,
     MatIconModule,
     MatButtonModule,
