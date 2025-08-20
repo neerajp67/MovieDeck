@@ -1,4 +1,4 @@
-import { DatePipe, DecimalPipe, NgIf } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { Router } from '@angular/router';
@@ -10,7 +10,6 @@ import { MediaCard } from '../../../models/tmdb.model';
   imports: [MatCardModule,
     DecimalPipe,
     DatePipe,
-    NgIf
   ],
   templateUrl: './media-card.component.html',
   styleUrl: './media-card.component.scss'

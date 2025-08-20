@@ -3,13 +3,16 @@
     <h2>You might also like</h2>
   </div>
 
-  <app-horizontal-scroll *ngIf="similarItems && similarItems.length > 0">
-    <ng-container *ngFor="let item of similarItems">
-      <app-media-card [media]="getMedia(item)"></app-media-card>
-    </ng-container>
+  @if (similarItems && similarItems.length > 0) {
+  <app-horizontal-scroll>
+    @for (item of similarItems; track $index) {
+    <app-media-card [media]="getMedia(item)"></app-media-card>
+    }
   </app-horizontal-scroll>
-
-  <div *ngIf="!similarItems || similarItems.length === 0" class="info-message">
+  } @else {
+  <div class="info-message">
     <p>No similar items found.</p>
   </div>
+  }
+
 </section>

@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -9,16 +8,18 @@ import { TmdbApiService } from '../../../services/api/tmdb-api.service';
 import { MatCardModule } from '@angular/material/card';
 import { TrailerPlayerService } from '../../../services/utils/trailer-player.service';
 import { HorizontalScrollComponent } from "../../shared/horizontal-scroll/horizontal-scroll.component";
+import { DatePipe, DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-trailers',
   imports: [
-    CommonModule,
     MatButtonToggleModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    HorizontalScrollComponent
+    HorizontalScrollComponent,
+    DatePipe,
+    DecimalPipe
   ],
   templateUrl: './trailers.component.html',
   styleUrl: './trailers.component.scss',

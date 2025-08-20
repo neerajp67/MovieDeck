@@ -4,20 +4,22 @@
   </div>
 
   <app-horizontal-scroll>
-    <ng-container *ngFor="let member of cast()">
-      <mat-card class="media-card-item">
-        <img [src]="getProfileImageUrl(member.profile_path)" [alt]="member.name + ' profile photo'"
-          class="media-card-background-image" (error)="member.profile_path = null">
-        <div class="media-card-overlay"></div>
-        <mat-card-content class="media-card-content">
-          <mat-card-title class="media-card-title">{{ member.name }}</mat-card-title>
-          <mat-card-subtitle class="media-card-subtitle">{{ member.character }}</mat-card-subtitle>
-        </mat-card-content>
-      </mat-card>
-    </ng-container>
+    @for (member of cast(); track $index) {
+    <mat-card class="media-card-item">
+      <img [src]="getProfileImageUrl(member.profile_path)" [alt]="member.name + ' profile photo'"
+        class="media-card-background-image" (error)="member.profile_path = null">
+      <div class="media-card-overlay"></div>
+      <mat-card-content class="media-card-content">
+        <mat-card-title class="media-card-title">{{ member.name }}</mat-card-title>
+        <mat-card-subtitle class="media-card-subtitle">{{ member.character }}</mat-card-subtitle>
+      </mat-card-content>
+    </mat-card>
+    }
   </app-horizontal-scroll>
 
-  <div *ngIf="!cast() || cast().length === 0" class="info-message">
+  @if (!cast() || cast().length === 0) {
+  <div class="info-message">
     <p>No top billed cast found.</p>
   </div>
+  }
 </section>

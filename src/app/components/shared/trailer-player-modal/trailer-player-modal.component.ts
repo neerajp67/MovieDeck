@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -18,7 +17,6 @@ export interface TrailerModalData {
   selector: 'app-trailer-player-modal',
   standalone: true,
   imports: [
-    CommonModule,
     MatDialogModule,
     MatIconModule,
     MatButtonModule,

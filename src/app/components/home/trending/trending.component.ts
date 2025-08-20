@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -14,7 +13,7 @@ import { MediaCardComponent } from "../../shared/media-card/media-card.component
 
 @Component({
   selector: 'app-trending',
-  imports: [CommonModule,
+  imports: [
     FormsModule,
     MatCardModule,
     MatButtonModule,

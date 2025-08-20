@@ -6,11 +6,14 @@
 
     <mat-card-content class="media-card-content">
         <mat-card-title class="media-card-title">{{ media().title}}</mat-card-title>
-        <mat-card-subtitle *ngIf="media().release_date" class="media-card-subtitle">
+        @if (media().release_date) {
+        <mat-card-subtitle class="media-card-subtitle">
             {{ media().release_date | date:'MMM y' }}
-            <span *ngIf="media().vote_average">
-                | {{ media().vote_average | number: '1.1-1' }}
-            </span>
+
+            @if(media().vote_average) {
+            | {{ media().vote_average | number: '1.1-1' }}
+            }
         </mat-card-subtitle>
+        }
     </mat-card-content>
 </mat-card>

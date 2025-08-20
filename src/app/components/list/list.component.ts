@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -12,6 +11,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { Subject, filter, takeUntil, Observable } from 'rxjs';
 import { TmdbApiService } from '../../services/api/tmdb-api.service';
+import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
 
 export type MediaType = 'movie' | 'tv' | 'person';
 export type FilterType = 'bollywood' | 'hollywood';
@@ -20,13 +20,15 @@ export type FilterType = 'bollywood' | 'hollywood';
   selector: 'app-list',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatCardModule,
     MatButtonModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    NgClass,
+    DatePipe,
+    DecimalPipe
   ],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']

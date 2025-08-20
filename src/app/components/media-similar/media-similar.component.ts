@@ -1,5 +1,4 @@
 import { Component, Input, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,7 +14,7 @@ import { MediaCardComponent } from "../shared/media-card/media-card.component";
 @Component({
   selector: 'app-media-similar',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
     MatCardModule,
     MatIconModule,
     MatButtonModule,
