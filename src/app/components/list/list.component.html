@@ -29,28 +29,8 @@
 
     @if (!isLoading && mediaItems.length > 0) {
     <div class="media-grid">
-        @for (item of mediaItems; track $index) {
-        <mat-card class="media-card-item" [ngClass]="{'person-card': selectedMediaType === 'person'}"
-            (click)="navigateToDetails(item)">
-            <img [src]="getProfileImageUrl(item)" [alt]="item.title || item.name" class="media-card-background-image"
-                (error)="selectedMediaType === 'person' ? item.profile_path = null : item.poster_path = null">
-            <div class="media-card-overlay"></div>
-            <mat-card-content class="media-card-content">
-                <mat-card-title class="media-card-title">{{ item?.title || item?.name }}</mat-card-title>
-                @if (selectedMediaType !== 'person' && (item.release_date || item.first_air_date)) {
-                <mat-card-subtitle class="media-card-subtitle">
-                    {{ item.release_date || item.first_air_date | date:'MMM y' }}
-                    @if(item.vote_average) {
-                    | {{ item.vote_average | number: '1.1-1' }}
-                    }
-                </mat-card-subtitle>
-                } @else {
-                <mat-card-subtitle class="media-card-subtitle">
-                    {{ item.known_for_department }}
-                </mat-card-subtitle>
-                }
-            </mat-card-content>
-        </mat-card>
+        @for (media of mediaItems; track $index) {
+        <app-media-card [media]="getMedia(media)"></app-media-card>
         }
     </div>
     }
