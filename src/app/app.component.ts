@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/layout/navbar/navbar.component';
 import { FooterComponent } from './components/layout/footer/footer.component';
@@ -13,9 +13,7 @@ import { StoreService } from './services/utils/store.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  title = 'MovieDeck';
-
-  constructor(private storeService: StoreService) { }
+  storeService = inject(StoreService);
 
   ngOnInit(): void {
     this.storeService.loadGenre();

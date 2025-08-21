@@ -23,7 +23,7 @@ export class TmdbApiService {
   * @param type The type of image ('backdrop' for hero, 'poster' for others, etc.).
   * @returns The full URL string or a placeholder if path is null.
   */
-  getFullImageUrl(path: string | null, size: string = 'w500', type: 'backdrop' | 'poster' = 'backdrop'): string {
+  getFullImageUrl(path: string | null | undefined, size: string = 'w500', type: 'backdrop' | 'poster' = 'backdrop'): string {
     if (!path) {
       return 'assets/images/media_placeholder_image.png';
     }

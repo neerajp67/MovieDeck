@@ -1,9 +1,9 @@
 <section class="hero-section-container">
   <div id="background" class="background">
-    @if (movies && movies.length > 0 && currentMovie) {
+    @if (movies() && movies().length > 0 && currentMovie()) {
     <div class="image-slideshow-wrapper">
-      <img [src]="movieService.getFullImageUrl(currentMovie.backdrop_path, 'backdrop')" [alt]="currentMovie.title"
-        [class.fade-in]="isImageFading" class="hero-background-image" />
+      <img [src]="movieService.getFullImageUrl(currentMovie()?.backdrop_path, 'backdrop')" [alt]="currentMovie()?.title"
+        [class.fade-in]="isImageFading()" class="hero-background-image" />
     </div>
     }
 
@@ -13,27 +13,27 @@
   <div id="foreground" class="foreground">
     <div class="foreground-sub">
       <div class="details-container">
-        @if (currentMovie) {
-        <h1 class="mat-display-2 fade-in-up">{{ currentMovie.title }}</h1>
+        @if (currentMovie()) {
+        <h1 class="mat-display-2 fade-in-up">{{ currentMovie()?.title }}</h1>
         <p class="mat-body-1 fade-in-up delay-1">
-          {{ currentMovie.release_date | date: 'MMM y' }}
-          @if(currentMovie.vote_average) {
+          {{ currentMovie()?.release_date | date: 'MMM y' }}
+          @if(currentMovie()?.vote_average) {
           <span>
-            | {{ currentMovie.vote_average | number: '1.1-1' }} / 10
+            | {{ currentMovie()?.vote_average | number: '1.1-1' }} / 10
           </span>
           }
         </p>
         <p class="mat-body-2 fade-in-up delay-2 genres">
-          @for (genreId of currentMovie.genre_ids; track $index;let last = $last) {
+          @for (genreId of currentMovie()?.genre_ids; track $index;let last = $last) {
           <span>
             {{ getGenreName(genreId) }}{{ !last ? ' | ' : '' }}
           </span>
           }
         </p>
-        <p class="mat-body-1 overview fade-in-up delay-3">{{ currentMovie.overview }}</p>
+        <p class="mat-body-1 overview fade-in-up delay-3">{{ currentMovie()?.overview }}</p>
 
         <button mat-flat-button color="primary" class="button-big fade-in-up delay-4"
-          [attr.aria-label]="'View details for ' + currentMovie.title" (click)="viewDetails(currentMovie.id)">
+          [attr.aria-label]="'View details for ' + currentMovie()?.title" (click)="viewDetails(currentMovie()?.id)">
           <mat-icon>info</mat-icon> View Details
         </button>
         }
@@ -50,10 +50,10 @@
     </div>
 
     <div class="mobile-navigation-dots" role="tablist">
-      @for(movie of movies; track $index;let i = $index) {
-      <span [class.active]="i === currentSlideIndex" (click)="selectSlide(i)"
-        [attr.aria-label]="'Go to movie ' + (i + 1)" [attr.aria-selected]="i === currentSlideIndex" role="tab"
-        [attr.tabindex]="i === currentSlideIndex ? 0 : -1"></span>
+      @for(movie of movies(); track $index;let i = $index) {
+      <span [class.active]="i === currentSlideIndex()" (click)="selectSlide(i)"
+        [attr.aria-label]="'Go to movie ' + (i + 1)" [attr.aria-selected]="i === currentSlideIndex()" role="tab"
+        [attr.tabindex]="i === currentSlideIndex() ? 0 : -1"></span>
       }
     </div>
   </div>
