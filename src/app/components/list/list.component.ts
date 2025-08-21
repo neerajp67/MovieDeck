@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-import { Movie, TmdbResponse, Person, TvShow } from '../../models/tmdb.model';
+import { Movie, TmdbResponse, Person, TvShow, MediaCard } from '../../models/tmdb.model';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -11,7 +11,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { Subject, filter, takeUntil, Observable } from 'rxjs';
 import { TmdbApiService } from '../../services/api/tmdb-api.service';
-import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
+import { MediaCardComponent } from "../shared/media-card/media-card.component";
 
 export type MediaType = 'movie' | 'tv' | 'person';
 export type FilterType = 'bollywood' | 'hollywood';
@@ -26,9 +26,7 @@ export type FilterType = 'bollywood' | 'hollywood';
     MatProgressSpinnerModule,
     MatIconModule,
     MatButtonToggleModule,
-    NgClass,
-    DatePipe,
-    DecimalPipe
+    MediaCardComponent
   ],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
@@ -132,6 +130,16 @@ export class ListComponent implements OnInit, OnDestroy {
     if (this.selectedMediaType === 'person' && !item?.profile_path) return this.placeholderImage;
 
     return this.movieService.getFullImageUrl(this.selectedMediaType === 'person' ? item?.profile_path : item?.poster_path, 'w300')
+  }
+
+  getMedia(media: Movie): MediaCard {
+    return {
+      id: media.id,
+      title: media.title || media.name,
+      poster_path: media.poster_path,
+      release_date: media.release_date || media.first_air_date,
+      vote_average: media.vote_average
+    };
   }
 
   ngOnDestroy(): void {
