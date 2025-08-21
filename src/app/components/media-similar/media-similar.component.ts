@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy, input } from '@angular/core';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,8 +26,8 @@ import { MediaCardComponent } from "../shared/media-card/media-card.component";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MediaSimilarComponent implements OnDestroy {
-  @Input() similarItems: (Movie | TvShow)[] = [];
-  @Input() mediaType: 'movie' | 'tv' = 'movie'; // New input for mediaType to handle navigation
+  similarItems = input<(Movie | TvShow)[]>([]);
+  mediaType = input<'movie' | 'tv'>('movie');
 
   private readonly destroy$ = new Subject<void>();
 
@@ -42,7 +42,7 @@ export class MediaSimilarComponent implements OnDestroy {
       poster_path: media.poster_path,
       release_date: media.release_date || media.first_air_date,
       vote_average: media.vote_average,
-      media_type: this.mediaType
+      media_type: this.mediaType()
     };
   }
 

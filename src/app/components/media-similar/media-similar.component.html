@@ -3,9 +3,9 @@
     <h2>You might also like</h2>
   </div>
 
-  @if (similarItems && similarItems.length > 0) {
+  @if (similarItems() && similarItems().length > 0) {
   <app-horizontal-scroll>
-    @for (item of similarItems; track $index) {
+    @for (item of similarItems(); track $index) {
     <app-media-card [media]="getMedia(item)"></app-media-card>
     }
   </app-horizontal-scroll>
