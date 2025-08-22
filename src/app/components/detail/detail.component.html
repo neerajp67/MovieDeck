@@ -1,56 +1,56 @@
 <div class="detail-page-wrapper" [ngStyle]="{'background-image': getBackdropImageUrl()}">
 
   <div class="backdrop-overlay"></div>
-  @if (isLoading) {
+  @if (isLoading()) {
   <div class="loading-indicator">
     <mat-spinner diameter="60"></mat-spinner>
   </div>
   }
 
-  @if (errorMessage && !isLoading) {
+  @if (errorMessage() && !isLoading()) {
   <div class="error-message">
-    <p>{{ errorMessage }}</p>
+    <p>{{ errorMessage() }}</p>
     <button mat-stroked-button routerLink="/home">Go Home</button>
   </div>
   }
 
-  @if (mediaItem && !isLoading) {
+  @if (mediaItem() && !isLoading()) {
   <div class="detail-content-container">
     <div class="poster-column">
-      <img [src]="movieService.getFullImageUrl(mediaItem.poster_path, 'w500')" [alt]="mediaItem.title || mediaItem.name"
-        class="detail-poster" (error)="mediaItem.poster_path = null">
+      <img [src]="movieService.getFullImageUrl(mediaItem()?.poster_path, 'w500')" [alt]="mediaItem()?.title || mediaItem()?.name"
+        class="detail-poster" (error)="mediaItem()?.poster_path">
     </div>
 
     <div class="info-column">
       <h1 class="title">
-        {{ mediaItem.title || mediaItem.name }}
-        @if(mediaItem.release_date || mediaItem.release_date) {
+        {{ mediaItem()?.title || mediaItem()?.name }}
+        @if(mediaItem()?.release_date || mediaItem()?.first_air_date) {
         <span class="release-year">
-          ({{ getYear(mediaItem.release_date || mediaItem.release_date) }})
+          ({{ getYear(mediaItem()?.release_date || mediaItem()?.first_air_date) }})
         </span>
         }
       </h1>
-      @if (mediaItem.original_title && mediaItem.original_title !== mediaItem.title) {
+      @if (mediaItem()?.original_title && mediaItem()?.original_title !== mediaItem()?.title) {
       <p class="original-title">
-        Original Title: {{ mediaItem.original_title }}
+        Original Title: {{ mediaItem()?.original_title }}
       </p>
       }
 
       <div class="metadata-line">
-        @if (mediaType === 'movie' && mediaItem.release_date) {
+        @if (mediaType() === 'movie' && mediaItem()?.release_date) {
         <span class="release-date">
-          {{ mediaItem.release_date | date:'MMM d y' }} ({{ mediaItem.original_language.toUpperCase() }})
+          {{ mediaItem()?.release_date | date:'MMM d y' }} ({{ mediaItem()?.original_language?.toUpperCase() }})
         </span>
         }
-        @if (mediaType === 'tv' && mediaItem.first_air_date) {
+        @if (mediaType() === 'tv' && mediaItem()?.first_air_date) {
         <span class="release-date">
-          {{ mediaItem.first_air_date | date:'MMM d y' }} ({{ mediaItem.original_language.toUpperCase() }})
+          {{ mediaItem()?.first_air_date | date:'MMM d y' }} ({{ mediaItem()?.original_language?.toUpperCase() }})
         </span>
         }
-        @if (mediaItem.genres && mediaItem.genres.length > 0) {
+        @if ((mediaItem()?.genres ?? []).length > 0) {
         <span class="genres">
           <mat-chip-set aria-label="Genres">
-            @for (genre of mediaItem.genres.slice(0, 3); track $index) {
+            @for (genre of mediaItem()?.genres?.slice(0, 3); track $index) {
             <mat-chip class="genre-chip" disabled>
               {{ genre.name }}
             </mat-chip>
@@ -58,15 +58,15 @@
           </mat-chip-set>
         </span>
         }
-        @if (mediaItem.runtime) {
-        <span class="runtime">{{ mediaItem.runtime }} min</span>
+        @if (mediaItem()?.runtime) {
+        <span class="runtime">{{ mediaItem()?.runtime }} min</span>
         }
-        @if (mediaItem.status) {
-        <span class="status">{{ mediaItem.status }}</span>
+        @if (mediaItem()?.status) {
+        <span class="status">{{ mediaItem()?.status }}</span>
         }
       </div>
 
-      @if (credits) {
+      @if (credits()) {
       <div class="crew-section">
         @if (getDirectors().length > 0) {
         <span class="crew-item">
@@ -79,7 +79,7 @@
         }
         @if (getCreators().length > 0) {
         <span class="crew-item">
-          <h4>{{ mediaType === 'movie' ? 'Written by' : 'Created by' }}</h4>
+          <h4>{{ mediaType() === 'movie' ? 'Written by' : 'Created by' }}</h4>
           @for (creator of getCreators(); track $index; let last = $last) {
           {{ creator.name }}{{ !last ? ', ' : '' }}
           }
@@ -89,45 +89,45 @@
       }
 
       <div class="actions-and-score">
-        @if (mediaItem.vote_average) {
+        @if (mediaItem()?.vote_average) {
         <div class="user-score">
-          <span class="score-value">{{ mediaItem.vote_average | number:'1.1-1' }} / 10</span>
-          <span class="score-label">TMDb Score ({{ mediaItem.vote_count | number }} votes)</span>
+          <span class="score-value">{{ mediaItem()?.vote_average | number:'1.1-1' }} / 10</span>
+          <span class="score-label">TMDb Score ({{ mediaItem()?.vote_count | number }} votes)</span>
         </div>
         }
         <div class="action-buttons">
-          @if (mediaItem.homepage) {
+          @if (mediaItem()?.homepage) {
           <button mat-icon-button aria-label="Homepage" matTooltip="Visit Homepage"
-            (click)="openHomepage(mediaItem.homepage)">
+            (click)="openHomepage(mediaItem()?.homepage)">
             <mat-icon>home</mat-icon>
           </button>
           }
-          <button [class.disabled]="!mainTrailer?.trailerKey" mat-flat-button class="play-trailer-button"
-            (click)="openTrailer(mainTrailer)" [title]="!mainTrailer?.trailerKey ? 'No trailer available' : ''">
+          <button [class.disabled]="!mainTrailer()?.trailerKey" mat-flat-button class="play-trailer-button"
+            (click)="openTrailer(mainTrailer())" [title]="!mainTrailer()?.trailerKey ? 'No trailer available' : ''">
             <mat-icon>play_arrow</mat-icon> Play Trailer
           </button>
         </div>
       </div>
 
-      @if (mediaItem.tagline) {
-      <p class="tagline">{{ mediaItem.tagline }}</p>
+      @if (mediaItem()?.tagline) {
+      <p class="tagline">{{ mediaItem()?.tagline }}</p>
       }
 
-      @if (mediaItem.overview) {
+      @if (mediaItem()?.overview) {
       <div class="overview-section">
         <h3>Overview</h3>
-        <p>{{ mediaItem.overview }}</p>
+        <p>{{ mediaItem()?.overview }}</p>
       </div>
       }
 
-      @if (mediaType === 'movie' && (mediaItem.budget || mediaItem.revenue)) {
+      @if (mediaType() === 'movie' && (mediaItem()?.budget || mediaItem()?.revenue)) {
       <div class="budget-revenue-section">
         <h3>Financials</h3>
-        @if (mediaItem.budget) {
-        <p>Budget: {{ mediaItem.budget | currency:'USD' }}</p>
+        @if (mediaItem()?.budget) {
+        <p>Budget: {{ mediaItem()?.budget | currency:'USD' }}</p>
         }
-        @if (mediaItem.revenue) {
-        <p>Revenue: {{ mediaItem.revenue | currency:'USD' }}</p>
+        @if (mediaItem()?.revenue) {
+        <p>Revenue: {{ mediaItem()?.revenue | currency:'USD' }}</p>
         }
       </div>
       }
@@ -136,5 +136,5 @@
   }
 </div>
 
-<app-media-cast [cast]="credits?.cast || []"></app-media-cast>
-<app-media-similar [similarItems]="similarItems" [mediaType]="mediaType"></app-media-similar>
+<app-media-cast [cast]="credits()?.cast || []"></app-media-cast>
+<app-media-similar [similarItems]="similarItems()" [mediaType]="mediaType()"></app-media-similar>

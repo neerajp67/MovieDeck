@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
 import { DatePipe, DecimalPipe, CurrencyPipe, NgStyle } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SafeResourceUrl } from '@angular/platform-browser';
@@ -37,55 +37,52 @@ import { MediaSimilarComponent } from "../media-similar/media-similar.component"
   styleUrl: './detail.component.scss'
 })
 export class DetailComponent implements OnInit, OnDestroy {
-  mediaItem: Movie | TvShow | null = null;
-  credits: CreditsResponse | null = null;
-  mainTrailer: TrailerItem | null = null;
-  trailerUrl: SafeResourceUrl | null = null;
-  similarItems: (Movie | TvShow)[] = [];
+  route = inject(ActivatedRoute);
+  movieService = inject(TmdbApiService);
+  trailerPlayerService = inject(TrailerPlayerService);
 
-  isLoading: boolean = true;
-  errorMessage: string | null = null;
-  mediaType: 'movie' | 'tv' = 'movie';
-  mediaId: number | null = null;
+  mediaItem = signal<Movie | TvShow | null>(null);
+  credits = signal<CreditsResponse | null>(null);
+  mainTrailer = signal<TrailerItem | null>(null);
+  trailerUrl = signal<SafeResourceUrl | null>(null);
+  similarItems = signal<(Movie | TvShow)[]>([]);
+
+  isLoading = signal<boolean>(true);
+  errorMessage = signal<string | null>(null);
+  mediaType = signal<'movie' | 'tv'>('movie');
+  mediaId = signal<number | null>(null);
 
   private destroy$ = new Subject<void>();
-
-
-  constructor(
-    private route: ActivatedRoute,
-    public movieService: TmdbApiService,
-    private trailerPlayerService: TrailerPlayerService
-  ) { }
 
   ngOnInit(): void {
     this.route.data.pipe(
       switchMap(data => {
-        this.mediaType = data['mediaType'] as 'movie' | 'tv';
+        this.mediaType.set(data['mediaType'] as 'movie' | 'tv');
         return this.route.paramMap;
       }),
       switchMap(params => {
         const id = Number(params.get('id'));
         if (!id) {
-          this.errorMessage = 'Invalid ID.';
-          this.isLoading = false;
+          this.errorMessage.set('Invalid ID.');
+          this.isLoading.set(false);
           return of(null);
         }
-        this.mediaId = id;
-        return this.fetchMediaDetails(id, this.mediaType);
+        this.mediaId.set(id);
+        return this.fetchMediaDetails(id, this.mediaType());
       }),
       takeUntil(this.destroy$)
     ).subscribe(result => {
       if (result) {
-        this.mediaItem = result.details;
-        this.credits = result.credits;
-        this.mainTrailer = {
-          id: this.mediaItem.id,
-          title: this.mediaItem.title || this.mediaItem.name,
-          posterPath: this.mediaItem.backdrop_path || this.mediaItem.poster_path,
+        this.mediaItem.set(result.details);
+        this.credits.set(result.credits);
+        this.mainTrailer.set({
+          id: this.mediaItem()?.id,
+          title: this.mediaItem()?.title || this.mediaItem()?.name,
+          posterPath: this.mediaItem()?.backdrop_path || this.mediaItem()?.poster_path,
           trailerKey: result.trailer?.key || result?.videos?.results[0]?.key || null,
-          mediaType: this.mediaType,
-          releaseDate: this.mediaItem?.release_date
-        } as TrailerItem;
+          mediaType: this.mediaType(),
+          releaseDate: this.mediaItem()?.release_date
+        } as TrailerItem);
 
         this.loadSimilarItems();
       }
@@ -93,8 +90,8 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   fetchMediaDetails(id: number, type: 'movie' | 'tv') {
-    this.isLoading = true;
-    this.errorMessage = null;
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
 
     const detailObs = type === 'movie'
       ? this.movieService.getMovieDetails(id)
@@ -117,23 +114,23 @@ export class DetailComponent implements OnInit, OnDestroy {
         const officialTrailer = data.videos.results.find(
           v => v.site === 'YouTube' && v.type === 'Trailer' && v.official
         ) || data.videos.results.find(v => v.site === 'YouTube' && v.type === 'Trailer');
-        this.isLoading = false;
+        this.isLoading.set(false);
         return { ...data, trailer: officialTrailer || null };
       }),
       catchError(err => {
         this.errorMessage = err.message || `Failed to load ${type} details.`;
-        this.isLoading = false;
+        this.isLoading.set(false);
         return of(null);
       })
     );
   }
 
   loadSimilarItems(): void {
-    if (this.mediaId && this.mediaType) {
-      const similarObs = this.movieService.getSimilarMedia(this.mediaType, this.mediaId);
+    if (this.mediaId() && this.mediaType()) {
+      const similarObs = this.movieService.getSimilarMedia(this.mediaType(), this.mediaId() as number);
       similarObs.pipe(takeUntil(this.destroy$))
         .subscribe(response => {
-          this.similarItems = response.results;
+          this.similarItems.set(response.results);
         });
     }
   }
@@ -144,8 +141,8 @@ export class DetailComponent implements OnInit, OnDestroy {
    * @returns A string containing the URL for the backdrop image, or 'none' if no backdrop path is available.
    */
   getBackdropImageUrl(): string {
-    if (this.mediaItem?.backdrop_path) {
-      return `url(${this.movieService.getFullImageUrl(this.mediaItem.backdrop_path, 'w1280')})`;
+    if (this.mediaItem()?.backdrop_path) {
+      return `url(${this.movieService.getFullImageUrl(this.mediaItem()?.backdrop_path, 'w1280')})`;
     }
     return 'none';
   }
@@ -155,11 +152,11 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   getCreators(): CrewMember[] {
-    return this.credits?.crew.filter(c => c.job === 'Creator' || c.department === 'Writing') || [];
+    return this.credits()?.crew.filter(c => c.job === 'Creator' || c.department === 'Writing') || [];
   }
 
   getDirectors(): CrewMember[] {
-    return this.credits?.crew.filter(c => c.job === 'Director') || [];
+    return this.credits()?.crew.filter(c => c.job === 'Director') || [];
   }
 
   openTrailer(trailerItem: any): void {
@@ -176,7 +173,7 @@ export class DetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  openHomepage(url: string): void {
+  openHomepage(url: string | null | undefined): void {
     if (url) {
       window.open(url, '_blank');
     }
