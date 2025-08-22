@@ -25,9 +25,9 @@
     </div>
     }
 
-    @if (videoUrl && !data.isLoading && !data.errorMessage) {
+    @if (videoUrl() && !data.isLoading && !data.errorMessage) {
     <div class="video-player-wrapper">
-      <iframe [title]="data.title" [src]="videoUrl"
+      <iframe [title]="data.title" [src]="videoUrl()"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen class="youtube-player">
       </iframe>

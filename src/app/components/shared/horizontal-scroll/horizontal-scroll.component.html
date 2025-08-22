@@ -1,6 +1,6 @@
 <div class="scroll-wrapper" (mouseenter)="onScrollWrapperMouseEnter()" (mouseleave)="onScrollWrapperMouseLeave()">
 
-  @if (showArrows && canScrollLeft) {
+  @if (showArrows() && canScrollLeft()) {
   <button mat-icon-button class="scroll-arrow left-arrow" (click)="scrollContentLeft()">
     <mat-icon>chevron_left</mat-icon>
   </button>
@@ -12,7 +12,7 @@
     </div>
   </div>
 
-  @if (showArrows && canScrollRight) {
+  @if (showArrows() && canScrollRight()) {
   <button mat-icon-button class="scroll-arrow right-arrow" (click)="scrollRight()">
     <mat-icon>chevron_right</mat-icon>
   </button>
