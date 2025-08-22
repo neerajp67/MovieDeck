@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -14,9 +14,12 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
-  appName: string = 'MovieDeck';
+  appName = signal<string>('MovieDeck');
 
-  constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
+  matIconRegistry = inject(MatIconRegistry);
+  domSanitizer = inject(DomSanitizer);
+
+  constructor() {
     this.matIconRegistry.addSvgIcon(
       'linkedin',
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/linkedin.svg')
@@ -34,6 +37,4 @@ export class FooterComponent {
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/instagram.svg')
     );
   }
-
-
 }

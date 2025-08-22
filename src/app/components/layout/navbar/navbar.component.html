@@ -2,13 +2,13 @@
 
   <a class="app-name-container" routerLink="/">
     <img src="assets/logo/product_logo.png" alt="MovieDeck Logo" class="app-logo">
-    <span class="app-name-text">{{ appName }}</span>
+    <span class="app-name-text">{{ appName() }}</span>
   </a>
 
   <span class="navbar-spacer"></span>
 
   <div class="desktop-links">
-    @for (link of navLinks; track $index) {
+    @for (link of navLinks(); track $index) {
     <a mat-button [routerLink]="link.path" routerLinkActive="active-link">
       <mat-icon>{{ link.icon }}</mat-icon>
       <span>{{ link.label }}</span>
@@ -21,7 +21,7 @@
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #mobileMenu="matMenu" class="mobile-menu-items">
-      @for (link of navLinks; track $index) {
+      @for (link of navLinks(); track $index) {
       <a mat-menu-item [routerLink]="link.path" routerLinkActive="active-link-mobile">
         <mat-icon>{{ link.icon }}</mat-icon>
         <span>{{ link.label }}</span>
