@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { CreditsResponse, Genre, Movie, TmdbResponse, TvShow, VideoResponse, Person } from '../../models/tmdb.model';
@@ -11,10 +11,10 @@ export type MediaType = 'movie' | 'tv' | 'person';
   providedIn: 'root'
 })
 export class TmdbApiService {
-  private apiUrl = environment.apiUrl;
+  private readonly apiUrl = environment.apiUrl;
   public imageBaseUrl = environment.imageBaseUrl;
 
-  constructor(private http: HttpClient) { }
+  private readonly http = inject(HttpClient);
 
   /**
   * Constructs the full image URL based on path and desired size.
