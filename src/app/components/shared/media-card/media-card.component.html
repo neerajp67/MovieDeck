@@ -1,18 +1,24 @@
-<mat-card class="media-card-item" (click)="navigateToDetails()" (keyPress)="navigateToDetails()">
-    <img [src]="movieService.getFullImageUrl(media().poster_path, 'w300')" [alt]="media().title"
+<mat-card class="media-card-item" (click)="navigateToDetails()" (keyPress)="navigateToDetails()"
+    [class.person-card]="media().media_type == 'person'">
+    <img [src]="getProfileImageUrl()" [alt]="media().title"
         (error)="media().poster_path=null" class="media-card-background-image">
 
     <div class="media-card-overlay"></div>
 
     <mat-card-content class="media-card-content">
         <mat-card-title class="media-card-title">{{ media().title}}</mat-card-title>
-        @if (media().release_date) {
+        @if (media().media_type !== 'person' && media().release_date) {
         <mat-card-subtitle class="media-card-subtitle">
-            {{ media().release_date | date:'MMM y' }}
+            {{ media().release_date | date:'MMM y'  }}
 
             @if(media().vote_average) {
             | {{ media().vote_average | number: '1.1-1' }}
             }
+        </mat-card-subtitle>
+        }
+        @if(media().media_type === 'person' && media().known_for_department) {
+        <mat-card-subtitle class="media-card-subtitle">
+            {{ media().known_for_department }}
         </mat-card-subtitle>
         }
     </mat-card-content>
