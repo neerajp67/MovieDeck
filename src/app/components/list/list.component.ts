@@ -118,11 +118,11 @@ export class ListComponent implements OnInit, OnDestroy {
     return this.movieService.getFullImageUrl(this.selectedMediaType() === 'person' ? item?.profile_path : item?.poster_path, 'w300')
   }
 
-  getMedia(media: Movie): MediaCard {
+  getMedia(media: any): MediaCard {
     return {
       id: media.id,
       title: media.title || media.name,
-      poster_path: media.poster_path,
+      poster_path: media.poster_path || media.profile_path,
       release_date: media.release_date || media.first_air_date,
       vote_average: media.vote_average,
       media_type: this.selectedMediaType() as PopularCategory
