@@ -1,7 +1,7 @@
 <div class="list-container">
     <div class="content-header">
-        @if (selectedMediaType !== 'person') {
-        <mat-button-toggle-group [value]="selectedFilter" (change)="selectFilter($event.value)"
+        @if (selectedMediaType() !== 'person') {
+        <mat-button-toggle-group [value]="selectedFilter()" (change)="selectFilter($event.value)"
             aria-label="Select filter type">
             <mat-button-toggle value="bollywood">Bollywood</mat-button-toggle>
             <mat-button-toggle value="hollywood">Hollywood</mat-button-toggle>
@@ -9,41 +9,41 @@
         }
     </div>
 
-    @if (isLoading) {
+    @if (isLoading()) {
     <div class="info-message">
         <mat-spinner diameter="50"></mat-spinner>
     </div>
     }
 
-    @if (errorMessage) {
+    @if (errorMessage()) {
     <div class="info-message error-message">
-        <p>{{ errorMessage }}</p>
+        <p>{{ errorMessage() }}</p>
     </div>
     }
 
-    @if (!isLoading && !errorMessage && mediaItems.length === 0) {
+    @if (!isLoading() && !errorMessage() && mediaItems().length === 0) {
     <div class="info-message">
-        <p>No {{ selectedFilter }} {{ selectedMediaType }} found.</p>
+        <p>No {{ selectedFilter() }} {{ selectedMediaType() }} found.</p>
     </div>
     }
 
-    @if (!isLoading && mediaItems.length > 0) {
+    @if (!isLoading() && mediaItems().length > 0) {
     <div class="media-grid">
-        @for (media of mediaItems; track $index) {
+        @for (media of mediaItems(); track $index) {
         <app-media-card [media]="getMedia(media)"></app-media-card>
         }
     </div>
     }
 
-    @if (!isLoading && totalPages > 1) {
+    @if (!isLoading() && totalPages() > 1) {
     <div class="pagination-controls scroll-wrapper">
-        <button mat-icon-button class="scroll-arrow left-arrow" (click)="goToPage(currentPage - 1)"
-            [disabled]="currentPage === 1" aria-label="Previous page">
+        <button mat-icon-button class="scroll-arrow left-arrow" (click)="goToPage(currentPage() - 1)"
+            [disabled]="currentPage() === 1" aria-label="Previous page">
             <mat-icon>chevron_left</mat-icon>
         </button>
-        <span>Page {{ currentPage }} of {{ totalPages }} ({{ totalResults }} results)</span>
-        <button mat-icon-button class="scroll-arrow right-arrow" (click)="goToPage(currentPage + 1)"
-            [disabled]="currentPage === totalPages" aria-label="Next page">
+        <span>Page {{ currentPage() }} of {{ totalPages() }} ({{ totalResults() }} results)</span>
+        <button mat-icon-button class="scroll-arrow right-arrow" (click)="goToPage(currentPage() + 1)"
+            [disabled]="currentPage() === totalPages()" aria-label="Next page">
             <mat-icon>chevron_right</mat-icon>
         </button>
     </div>
