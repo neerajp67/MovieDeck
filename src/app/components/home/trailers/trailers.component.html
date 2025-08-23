@@ -1,7 +1,7 @@
 <section class="content-section">
   <div class="content-header">
     <h2>Trailers</h2>
-    <mat-button-toggle-group [value]="selectedCategory" (change)="selectCategory($event.value)"
+    <mat-button-toggle-group [value]="selectedCategory()" (change)="selectCategory($event.value)"
       aria-label="Select trailer category">
       <mat-button-toggle value="movie">Movies</mat-button-toggle>
       <mat-button-toggle value="tv">TV Shows</mat-button-toggle>
@@ -9,27 +9,27 @@
     </mat-button-toggle-group>
   </div>
 
-  @if (isLoading) {
+  @if (isLoading()) {
   <div class="info-message">
     <mat-spinner diameter="50"></mat-spinner>
   </div>
   }
 
-  @if (errorMessage && !isLoading) {
+  @if (errorMessage() && !isLoading()) {
   <div class="info-message error-message">
-    <p>{{ errorMessage }}</p>
+    <p>{{ errorMessage() }}</p>
   </div>
   }
 
-  @if (!isLoading && !errorMessage && trailers.length === 0) {
+  @if (!isLoading() && !errorMessage() && trailers().length === 0) {
   <div class="info-message">
     <p>No trailers found for this selection.</p>
   </div>
   }
 
-  @if (!isLoading && trailers.length > 0) {
+  @if (!isLoading() && trailers().length > 0) {
   <app-horizontal-scroll>
-    @for (trailer of trailers; track $index) {
+    @for (trailer of trailers(); track $index) {
     <mat-card class="media-card-item" (click)="openTrailer(trailer)">
       <img [src]="getYouTubeThumbnail(trailer.trailerKey)" [alt]="trailer.title + ' trailer thumbnail'"
         class="media-card-background-image">

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -26,33 +26,30 @@ import { DatePipe, DecimalPipe } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrailersComponent implements OnInit, OnDestroy {
-  trailers: TrailerItem[] = [];
-  isLoading: boolean = true;
-  errorMessage: string | null = null;
-  selectedCategory: TrailerCategory = 'movie';
+  movieService = inject(TmdbApiService);
+  trailerPlayerService = inject(TrailerPlayerService);
+
+  trailers = signal<TrailerItem[]>([]);
+  isLoading = signal<boolean>(true);
+  errorMessage = signal<string | null>(null);
+  selectedCategory = signal<TrailerCategory>('movie');
 
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private movieService: TmdbApiService,
-    private cdr: ChangeDetectorRef,
-    private trailerPlayerService: TrailerPlayerService
-  ) { }
 
   ngOnInit(): void {
     this.loadTrailers();
   }
 
   loadTrailers(): void {
-    this.isLoading = true;
-    this.errorMessage = null;
-    this.trailers = [];
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+    this.trailers.set([]);
 
     let mediaObservable: Observable<TmdbResponse<Movie>>;
 
-    if (this.selectedCategory === 'movie') {
+    if (this.selectedCategory() === 'movie') {
       mediaObservable = this.movieService.getNowPlayingMovies(1, 'IN');
-    } else if (this.selectedCategory === 'tv') {
+    } else if (this.selectedCategory() === 'tv') {
       mediaObservable = this.movieService.getAiringTodayTvShows(1);
     } else {
       mediaObservable = this.movieService.getUpcomming(1);
@@ -65,9 +62,9 @@ export class TrailersComponent implements OnInit, OnDestroy {
           return of([]);
         }
         const videoRequests = items.map(item =>
-          (this.selectedCategory === 'movie'
+          (this.selectedCategory() === 'movie'
             ? this.movieService.getMovieVideos(item.id)
-            : this.selectedCategory === 'tv'
+            : this.selectedCategory() === 'tv'
               ? this.movieService.getTvShowVideos(item.id)
               : this.movieService.getUpcommingVideos(item.id)
           ).pipe(
@@ -81,7 +78,7 @@ export class TrailersComponent implements OnInit, OnDestroy {
                 title: (item as Movie).title || (item as Movie).name,
                 posterPath: item.backdrop_path || item.poster_path,
                 trailerKey: officialTrailer ? officialTrailer.key : null,
-                mediaType: this.selectedCategory,
+                mediaType: this.selectedCategory(),
                 releaseDate: item?.release_date,
                 vote_average: item?.vote_average
               } as TrailerItem;
@@ -91,7 +88,7 @@ export class TrailersComponent implements OnInit, OnDestroy {
               title: (item as Movie).title || (item as Movie).name,
               posterPath: item.backdrop_path || item.poster_path,
               trailerKey: null,
-              mediaType: this.selectedCategory,
+              mediaType: this.selectedCategory(),
               releaseDate: item?.release_date
             } as TrailerItem)
             )
@@ -102,26 +99,22 @@ export class TrailersComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe({
       next: (mediaWithTrailers: TrailerItem[]) => {
-        this.trailers = mediaWithTrailers.filter(item => item.trailerKey);
-        this.isLoading = false;
-        if (this.trailers.length === 0) {
-          this.errorMessage = `No ${this.selectedCategory} trailers found.`;
+        this.trailers.set(mediaWithTrailers.filter(item => item.trailerKey));
+        this.isLoading.set(false);
+        if (this.trailers().length === 0) {
+          this.errorMessage.set(`No ${this.selectedCategory} trailers found.`);
         }
-        requestAnimationFrame(() => {
-          this.cdr.detectChanges();
-        });
       },
       error: (err) => {
-        this.errorMessage = err.message || `Failed to load ${this.selectedCategory} trailers.`;
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.errorMessage.set(err.message || `Failed to load ${this.selectedCategory} trailers.`);
+        this.isLoading.set(false);
       }
     });
   }
 
   selectCategory(category: TrailerCategory): void {
-    if (this.selectedCategory !== category) {
-      this.selectedCategory = category;
+    if (this.selectedCategory() !== category) {
+      this.selectedCategory.set(category);
       this.loadTrailers();
     }
   }
