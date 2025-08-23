@@ -1,11 +1,10 @@
-import { Component, ChangeDetectionStrategy, OnDestroy, input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy, input, inject } from '@angular/core';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { Subject } from 'rxjs';
 import { TmdbApiService } from '../../services/api/tmdb-api.service';
 import { MediaCard, Movie, TvShow } from '../../models/tmdb.model';
 import { HorizontalScrollComponent } from "../shared/horizontal-scroll/horizontal-scroll.component";
@@ -25,15 +24,10 @@ import { MediaCardComponent } from "../shared/media-card/media-card.component";
   styleUrls: ['./media-similar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MediaSimilarComponent implements OnDestroy {
+export class MediaSimilarComponent {
+  movieService = inject(TmdbApiService);
   similarItems = input<(Movie | TvShow)[]>([]);
   mediaType = input<'movie' | 'tv'>('movie');
-
-  private readonly destroy$ = new Subject<void>();
-
-  constructor(
-    public movieService: TmdbApiService,
-  ) { }
 
   getMedia(media: Movie): MediaCard {
     return {
@@ -44,10 +38,5 @@ export class MediaSimilarComponent implements OnDestroy {
       vote_average: media.vote_average,
       media_type: this.mediaType()
     };
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }
