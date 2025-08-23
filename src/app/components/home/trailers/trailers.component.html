@@ -1,7 +1,7 @@
 <section class="content-section">
   <div class="content-header">
     <h2>Trailers</h2>
-    <mat-button-toggle-group [value]="selectedCategory()" (change)="selectCategory($event.value)"
+    <mat-button-toggle-group [(ngModel)]="selectedCategory" (change)="loadTrailers()"
       aria-label="Select trailer category">
       <mat-button-toggle value="movie">Movies</mat-button-toggle>
       <mat-button-toggle value="tv">TV Shows</mat-button-toggle>

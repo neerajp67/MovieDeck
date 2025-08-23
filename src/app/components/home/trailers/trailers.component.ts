@@ -9,10 +9,12 @@ import { MatCardModule } from '@angular/material/card';
 import { TrailerPlayerService } from '../../../services/utils/trailer-player.service';
 import { HorizontalScrollComponent } from "../../shared/horizontal-scroll/horizontal-scroll.component";
 import { DatePipe, DecimalPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-trailers',
   imports: [
+    FormsModule,
     MatButtonToggleModule,
     MatIconModule,
     MatProgressSpinnerModule,
@@ -110,13 +112,6 @@ export class TrailersComponent implements OnInit, OnDestroy {
         this.isLoading.set(false);
       }
     });
-  }
-
-  selectCategory(category: TrailerCategory): void {
-    if (this.selectedCategory() !== category) {
-      this.selectedCategory.set(category);
-      this.loadTrailers();
-    }
   }
 
   getYouTubeThumbnail(key: string | null): string {
