@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -24,13 +24,13 @@ interface NavLink {
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-  appName: string = 'MovieDeck';
-  appLogo: string = 'assets/logo/product_logo.png'
+  appName = signal<string>('MovieDeck');
+  appLogo = signal<string>('assets/logo/product_logo.png');
 
- navLinks: NavLink[] = [
+  navLinks = signal<NavLink[]>([
     { path: '/home', label: 'Home', icon: 'home' },
     { path: '/movies', label: 'Movies', icon: 'movie' },
     { path: '/shows', label: 'TV Shows', icon: 'tv' },
     { path: '/people', label: 'People', icon: 'people' }
-  ];  
+  ]);
 }

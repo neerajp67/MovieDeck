@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Inject, signal, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,26 +26,24 @@ export interface TrailerModalData {
   styleUrls: ['./trailer-player-modal.component.scss']
 })
 export class TrailerPlayerModalComponent implements OnInit {
-  videoUrl: SafeResourceUrl | null = null;
+  videoUrl = signal<SafeResourceUrl | null>(null);
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: TrailerModalData,
-    public dialogRef: MatDialogRef<TrailerPlayerModalComponent>,
-    private sanitizer: DomSanitizer,
-    private cdr: ChangeDetectorRef
-  ) { }
+  dialogRef = inject(MatDialogRef<TrailerPlayerModalComponent>);
+  sanitizer = inject(DomSanitizer);
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: TrailerModalData) { }
 
   ngOnInit(): void {
     if (this.data.trailerKey) {
-      this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+      this.videoUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(
         `https://www.youtube.com/embed/${this.data.trailerKey}?autoplay=0&controls=1&showinfo=0&rel=0&modestbranding=1`
-      );
+      ));
       this.data.isLoading = false;
       this.data.errorMessage = null;
     } else {
       this.data.isLoading = false;
       this.data.errorMessage = 'No trailer key provided for playback.';
-      this.videoUrl = null;
+      this.videoUrl.set(null);
     }
   }
 

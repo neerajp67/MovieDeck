@@ -6,7 +6,7 @@
   <app-horizontal-scroll>
     @for (member of cast(); track $index) {
     <mat-card class="media-card-item">
-      <img [src]="getProfileImageUrl(member.profile_path)" [alt]="member.name + ' profile photo'"
+      <img [src]="getProfileImageUrl(member.profile_path)" [alt]="member.name + ' profile'"
         class="media-card-background-image" (error)="member.profile_path = null">
       <div class="media-card-overlay"></div>
       <mat-card-content class="media-card-content">
