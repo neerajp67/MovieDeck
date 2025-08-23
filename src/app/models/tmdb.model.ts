@@ -127,5 +127,6 @@ export interface MediaCard {
   poster_path: string | null;
   release_date: string | null | undefined;
   vote_average: number;
-  media_type?: 'movie' | 'tv';
+  media_type?: 'movie' | 'tv' | 'person';
+  known_for_department?: string;
 }

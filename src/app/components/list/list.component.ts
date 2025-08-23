@@ -44,7 +44,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
   selectedMediaType = signal<MediaType>('movie');
   selectedFilter = signal<FilterType>('bollywood');
-  placeholderImage = signal<string>('assets/images/placeholder_person.png');
 
   private readonly destroy$ = new Subject<void>();
 
@@ -112,12 +111,6 @@ export class ListComponent implements OnInit, OnDestroy {
     }
   }
 
-  getProfileImageUrl(item: any): string {
-    if (this.selectedMediaType() === 'person' && !item?.profile_path) return this.placeholderImage();
-
-    return this.movieService.getFullImageUrl(this.selectedMediaType() === 'person' ? item?.profile_path : item?.poster_path, 'w300')
-  }
-
   getMedia(media: any): MediaCard {
     return {
       id: media.id,
@@ -125,7 +118,8 @@ export class ListComponent implements OnInit, OnDestroy {
       poster_path: media.poster_path || media.profile_path,
       release_date: media.release_date || media.first_air_date,
       vote_average: media.vote_average,
-      media_type: this.selectedMediaType() as PopularCategory
+      media_type: this.selectedMediaType(),
+      known_for_department: media.known_for_department
     };
   }
 
