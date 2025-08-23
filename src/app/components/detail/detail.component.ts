@@ -52,7 +52,7 @@ export class DetailComponent implements OnInit, OnDestroy {
   mediaType = signal<'movie' | 'tv'>('movie');
   mediaId = signal<number | null>(null);
 
-  private destroy$ = new Subject<void>();
+  private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
     this.route.data.pipe(

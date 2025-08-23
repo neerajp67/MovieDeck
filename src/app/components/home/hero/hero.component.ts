@@ -25,7 +25,6 @@ export class HeroComponent implements OnInit, OnDestroy {
   router = inject(Router);
   movieService = inject(TmdbApiService)
 
-
   private readonly destroy$ = new Subject<void>(); // For unsubscribing on destroy
   private slideshowSubscription: Subscription | null = null;
 
