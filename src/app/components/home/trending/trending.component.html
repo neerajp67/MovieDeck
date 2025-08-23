@@ -8,27 +8,27 @@
     </mat-button-toggle-group>
   </div>
 
-  @if (isLoading) {
+  @if (isLoading()) {
   <div class="info-message">
     <mat-spinner diameter="50"></mat-spinner>
   </div>
   }
 
-  @if (errorMessage) {
+  @if (errorMessage()) {
   <div class="info-message error-message">
-    <p>{{ errorMessage }}</p>
+    <p>{{ errorMessage() }}</p>
   </div>
   }
 
   @if (!isLoading && !errorMessage && trendingMovies.length === 0) {
   <div class="info-message">
-    <p>No trending movies found for {{ activeTimeWindow === 'day' ? 'today' : 'this week' }}.</p>
+    <p>No trending movies found for {{ activeTimeWindow() === 'day' ? 'today' : 'this week' }}.</p>
   </div>
   }
 
-  @if (!isLoading && trendingMovies.length > 0) {
+  @if (!isLoading() && trendingMovies().length > 0) {
   <app-horizontal-scroll>
-    @for (movie of trendingMovies; track $index) {
+    @for (movie of trendingMovies(); track $index) {
     <app-media-card [media]="getMedia(movie)"></app-media-card>
     }
   </app-horizontal-scroll>
