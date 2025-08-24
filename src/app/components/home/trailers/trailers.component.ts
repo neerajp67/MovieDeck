@@ -3,13 +3,13 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Subject, Observable, switchMap, of, map, catchError, forkJoin, takeUntil } from 'rxjs';
-import { TmdbResponse, Movie, TrailerCategory, TrailerItem } from '../../../models/tmdb.model';
+import { TmdbResponse, Movie, TrailerCategory, MediaCard } from '../../../models/tmdb.model';
 import { TmdbApiService } from '../../../services/api/tmdb-api.service';
 import { MatCardModule } from '@angular/material/card';
 import { TrailerPlayerService } from '../../../services/utils/trailer-player.service';
 import { HorizontalScrollComponent } from "../../shared/horizontal-scroll/horizontal-scroll.component";
-import { DatePipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MediaCardComponent } from "../../shared/media-card/media-card.component";
 
 @Component({
   selector: 'app-trailers',
@@ -20,8 +20,7 @@ import { FormsModule } from '@angular/forms';
     MatProgressSpinnerModule,
     MatCardModule,
     HorizontalScrollComponent,
-    DatePipe,
-    DecimalPipe
+    MediaCardComponent
   ],
   templateUrl: './trailers.component.html',
   styleUrl: './trailers.component.scss',
@@ -31,7 +30,7 @@ export class TrailersComponent implements OnInit, OnDestroy {
   movieService = inject(TmdbApiService);
   trailerPlayerService = inject(TrailerPlayerService);
 
-  trailers = signal<TrailerItem[]>([]);
+  trailers = signal<MediaCard[]>([]);
   isLoading = signal<boolean>(true);
   errorMessage = signal<string | null>(null);
   selectedCategory = signal<TrailerCategory>('movie');
@@ -75,24 +74,42 @@ export class TrailersComponent implements OnInit, OnDestroy {
                 v => v.site === 'YouTube' && v.type === 'Trailer' && v.official
               ) || videoResponse.results.find(v => v.site === 'YouTube' && v.type === 'Trailer');
 
+              // return {
+              //   id: item.id,
+              //   title: (item as Movie).title || (item as Movie).name,
+              //   posterPath: item.backdrop_path || item.poster_path,
+              //   trailerKey: officialTrailer ? officialTrailer.key : null,
+              //   mediaType: this.selectedCategory(),
+              //   releaseDate: item?.release_date,
+              //   vote_average: item?.vote_average
+              // } as TrailerItem;
               return {
                 id: item.id,
-                title: (item as Movie).title || (item as Movie).name,
-                posterPath: item.backdrop_path || item.poster_path,
-                trailerKey: officialTrailer ? officialTrailer.key : null,
+                title: item.title || item.name,
+                subtitle: {
+                  poster_path: item.backdrop_path || item.poster_path,
+                  release_date: item?.release_date,
+                  vote_average: item?.vote_average,
+                },
+                trailer: {
+                  trailer_key: officialTrailer ? officialTrailer.key : null,
+                },
                 mediaType: this.selectedCategory(),
-                releaseDate: item?.release_date,
-                vote_average: item?.vote_average
-              } as TrailerItem;
+              } as MediaCard;
             }),
             catchError(() => of({
               id: item.id,
               title: (item as Movie).title || (item as Movie).name,
-              posterPath: item.backdrop_path || item.poster_path,
-              trailerKey: null,
-              mediaType: this.selectedCategory(),
-              releaseDate: item?.release_date
-            } as TrailerItem)
+              subtitle: {
+                poster_path: item.backdrop_path || item.poster_path,
+                release_date: item?.release_date,
+                vote_average: item?.vote_average,
+              },
+              trailer: {
+                trailer_key: '',
+              },
+              mediaType: this.selectedCategory()
+            })
             )
           )
         );
@@ -100,15 +117,15 @@ export class TrailersComponent implements OnInit, OnDestroy {
       }),
       takeUntil(this.destroy$)
     ).subscribe({
-      next: (mediaWithTrailers: TrailerItem[]) => {
-        this.trailers.set(mediaWithTrailers.filter(item => item.trailerKey));
+      next: (mediaWithTrailers: MediaCard[]) => {
+        this.trailers.set(mediaWithTrailers.filter(item => item?.trailer?.trailer_key));
         this.isLoading.set(false);
         if (this.trailers().length === 0) {
-          this.errorMessage.set(`No ${this.selectedCategory} trailers found.`);
+          this.errorMessage.set(`No ${this.selectedCategory()} trailers found.`);
         }
       },
       error: (err) => {
-        this.errorMessage.set(err.message || `Failed to load ${this.selectedCategory} trailers.`);
+        this.errorMessage.set(err.message || `Failed to load ${this.selectedCategory()} trailers.`);
         this.isLoading.set(false);
       }
     });
@@ -118,19 +135,23 @@ export class TrailersComponent implements OnInit, OnDestroy {
     return key ? `https://img.youtube.com/vi/${key}/mqdefault.jpg` : 'https://via.placeholder.com/320x180.png?text=No+Trailer';
   }
 
-  openTrailer(trailerItem: TrailerItem): void {
+  openTrailer(media: MediaCard): void {
     // Only open if a trailerKey is available
-    if (trailerItem?.trailerKey) {
+    if (media.trailer?.trailer_key) {
       this.trailerPlayerService.openTrailerModal({
-        title: trailerItem.title,
-        posterPath: trailerItem.posterPath,
-        trailerKey: trailerItem.trailerKey,
+        title: media.title,
+        posterPath: media.subtitle.poster_path || null,
+        trailerKey: media.trailer.trailer_key,
         isLoading: false,
         errorMessage: null
       });
     } else {
-      console.warn('No trailer key available for this item (should have been filtered out):', trailerItem.title);
+      console.warn('No trailer key available for this item (should have been filtered out):', media.title);
     }
+  }
+
+  getMedia(media: MediaCard): MediaCard {
+    return media
   }
 
   ngOnDestroy(): void {

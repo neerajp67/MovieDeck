@@ -124,9 +124,14 @@ export interface Person {
 export interface MediaCard {
   id: number;
   title: string;
-  poster_path: string | null;
-  release_date: string | null | undefined;
-  vote_average: number;
+  subtitle: {
+    poster_path?: string | null,
+    release_date?: string,
+    vote_average?: number,
+    known_for_department?: string,
+  },
+  trailer?: {
+    trailer_key: string,
+  }
   media_type?: 'movie' | 'tv' | 'person';
-  known_for_department?: string;
 }

@@ -29,26 +29,8 @@
 
   @if (!isLoading() && trailers().length > 0) {
   <app-horizontal-scroll>
-    @for (trailer of trailers(); track $index) {
-    <mat-card class="media-card-item" (click)="openTrailer(trailer)">
-      <img [src]="getYouTubeThumbnail(trailer.trailerKey)" [alt]="trailer.title + ' trailer thumbnail'"
-        class="media-card-background-image">
-      <mat-icon class="play-icon">play_circle_filled</mat-icon>
-
-      <div class="media-card-overlay"></div>
-
-      <mat-card-content class="media-card-content">
-        <mat-card-title class="media-card-title">{{ trailer.title }}</mat-card-title>
-        @if (trailer.releaseDate) {
-        <mat-card-subtitle class="media-card-subtitle">
-          {{ trailer.releaseDate | date:'MMM d, y' }}
-          @if(trailer.vote_average) {
-          | {{ trailer.vote_average | number: '1.1-1' }}
-          }
-        </mat-card-subtitle>
-        }
-      </mat-card-content>
-    </mat-card>
+    @for (media of trailers(); track $index) {
+    <app-media-card [media]="getMedia(media)"></app-media-card>
     }
   </app-horizontal-scroll>
   }

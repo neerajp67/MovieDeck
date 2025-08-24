@@ -115,11 +115,13 @@ export class ListComponent implements OnInit, OnDestroy {
     return {
       id: media.id,
       title: media.title || media.name,
-      poster_path: media.poster_path || media.profile_path,
-      release_date: media.release_date || media.first_air_date,
-      vote_average: media.vote_average,
+      subtitle: {
+        poster_path: media.poster_path || media.profile_path,
+        release_date: media.release_date || media.first_air_date,
+        vote_average: media.vote_average,
+        known_for_department: media.known_for_department
+      },
       media_type: this.selectedMediaType(),
-      known_for_department: media.known_for_department
     };
   }
 

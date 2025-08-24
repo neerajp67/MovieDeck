@@ -27,7 +27,7 @@ import { MediaCardComponent } from "../../shared/media-card/media-card.component
 })
 export class TrendingComponent implements OnInit, OnDestroy {
   movieService = inject(TmdbApiService);
-  
+
   trendingMovies = signal<Movie[]>([]);
   isLoading = signal<boolean>(true);
   errorMessage = signal<string | null>(null);
@@ -59,10 +59,12 @@ export class TrendingComponent implements OnInit, OnDestroy {
   getMedia(media: Movie): MediaCard {
     return {
       id: media.id,
-      title: media.title,
-      poster_path: media.poster_path,
-      release_date: media.release_date || media.first_air_date,
-      vote_average: media.vote_average
+      title: media.title || media.name,
+      subtitle: {
+        poster_path: media.poster_path,
+        release_date: media.release_date || media.first_air_date,
+        vote_average: media.vote_average,
+      },
     };
   }
 
