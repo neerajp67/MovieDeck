@@ -17,6 +17,7 @@
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 20px;
   margin-top: 1.5rem;
+  justify-items: center;
 }
 
 .pagination-controls {
@@ -34,8 +35,4 @@
   .scroll-arrow {
     opacity: 1;
   }
-}
-
-.person-card {
-  cursor: auto;
 }

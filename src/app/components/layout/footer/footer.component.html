@@ -3,7 +3,7 @@
     <div class="footer-brand-info">
       <a class="footer-app-container" routerLink="/">
         <img src="assets/images/product_img.png" alt="MovieDeck Logo" class="footer-app-logo">
-        <span class="footer-app-name-text">{{appName}}</span>
+        <span class="footer-app-name-text">{{appName()}}</span>
       </a>
       <p class="app-description">
         MovieDeck is a web application for discovering the latest trending movies and TV shows. Powered by the TMDb API,
@@ -65,7 +65,7 @@
       <img src="assets/logo/tmdb_logo.svg" alt="TMDb Logo" class="tmdb-logo">
     </p>
     <p class="copyright-info">
-      &copy; 2025 {{appName}}. All rights reserved.
+      &copy; 2025 {{appName()}}. All rights reserved.
     </p>
   </div>
 </footer>

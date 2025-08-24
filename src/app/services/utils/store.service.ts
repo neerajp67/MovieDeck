@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
 import { Genre } from '../../models/tmdb.model';
 import { TmdbApiService } from '../api/tmdb-api.service';
 
@@ -7,28 +6,21 @@ import { TmdbApiService } from '../api/tmdb-api.service';
   providedIn: 'root'
 })
 export class StoreService {
+  moiveService = inject(TmdbApiService);
 
-  constructor(private moiveService: TmdbApiService) { }
-
-  private _genresSubject = new BehaviorSubject<Genre[]>([]);
-  genres$: Observable<Genre[]> = this._genresSubject.asObservable();
+  private readonly _genres = signal<Genre[]>([]);
+  public genres = this._genres.asReadonly();
 
   loadGenre() {
-    if (this._genresSubject.getValue().length === 0) { // Check if the subject already has data
+    if (this._genres().length === 0) { // Check if the subject already has data
       this.moiveService.getMovieGenre().subscribe({
-        next: (response: any) => { 
-          this._genresSubject.next(response.genres);
+        next: (response: any) => {
+          this._genres.set(response.genres);
         },
         error: (error) => {
           console.error('Error loading genres:', error);
         }
       });
-    } else {
-      console.log('Genres already loaded in StoreService.');
     }
-  }
-
-  getGenres(): Observable<Genre[]> {
-    return this.genres$;
   }
 }
