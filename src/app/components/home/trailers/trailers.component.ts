@@ -74,15 +74,6 @@ export class TrailersComponent implements OnInit, OnDestroy {
                 v => v.site === 'YouTube' && v.type === 'Trailer' && v.official
               ) || videoResponse.results.find(v => v.site === 'YouTube' && v.type === 'Trailer');
 
-              // return {
-              //   id: item.id,
-              //   title: (item as Movie).title || (item as Movie).name,
-              //   posterPath: item.backdrop_path || item.poster_path,
-              //   trailerKey: officialTrailer ? officialTrailer.key : null,
-              //   mediaType: this.selectedCategory(),
-              //   releaseDate: item?.release_date,
-              //   vote_average: item?.vote_average
-              // } as TrailerItem;
               return {
                 id: item.id,
                 title: item.title || item.name,
@@ -131,12 +122,7 @@ export class TrailersComponent implements OnInit, OnDestroy {
     });
   }
 
-  getYouTubeThumbnail(key: string | null): string {
-    return key ? `https://img.youtube.com/vi/${key}/mqdefault.jpg` : 'https://via.placeholder.com/320x180.png?text=No+Trailer';
-  }
-
   openTrailer(media: MediaCard): void {
-    // Only open if a trailerKey is available
     if (media.trailer?.trailer_key) {
       this.trailerPlayerService.openTrailerModal({
         title: media.title,
