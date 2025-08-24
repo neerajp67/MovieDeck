@@ -105,6 +105,7 @@ export interface TrailerItem {
   trailerKey: string | null;
   mediaType: TrailerCategory;
   releaseDate?: string;
+  vote_average: number;
 }
 
 export type TrailerCategory = 'movie' | 'tv' | 'upcomming';
@@ -118,4 +119,19 @@ export interface Person {
   profile_path: string | null;
   known_for_department: string;
   popularity: number;
+}
+
+export interface MediaCard {
+  id: number;
+  title: string;
+  subtitle: {
+    poster_path?: string | null,
+    release_date?: string,
+    vote_average?: number,
+    known_for_department?: string,
+  },
+  trailer?: {
+    trailer_key: string,
+  }
+  media_type?: 'movie' | 'tv' | 'person';
 }

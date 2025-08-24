@@ -7,27 +7,31 @@
   </div>
 
   <div class="modal-body">
-    <ng-container *ngIf="data.isLoading">
-      <div class="loading-overlay">
-        <img *ngIf="data.posterPath" [src]="data.posterPath" alt="Movie Poster" class="loading-poster-bg">
-        <div class="loading-gradient-overlay"></div>
-        <mat-spinner diameter="50"></mat-spinner>
-        <p>Loading trailer...</p>
-      </div>
-    </ng-container>
+    @if (data.isLoading) {
+    <div class="loading-overlay">
+      @if (data.posterPath) {
+      <img [src]="data.posterPath" alt="Movie Poster" class="loading-poster-bg">
+      }
+      <div class="loading-gradient-overlay"></div>
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading trailer...</p>
+    </div>
+    }
 
-    <ng-container *ngIf="data.errorMessage && !data.isLoading">
-      <div class="error-message-overlay">
-        <p>{{ data.errorMessage }}</p>
-        <button mat-button (click)="closeDialog()">Close</button>
-      </div>
-    </ng-container>
+    @if (data.errorMessage && !data.isLoading) {
+    <div class="error-message-overlay">
+      <p>{{ data.errorMessage }}</p>
+      <button mat-button (click)="closeDialog()">Close</button>
+    </div>
+    }
 
-    <div *ngIf="videoUrl && !data.isLoading && !data.errorMessage" class="video-player-wrapper">
-      <iframe [title]="data.title" [src]="videoUrl"
+    @if (videoUrl() && !data.isLoading && !data.errorMessage) {
+    <div class="video-player-wrapper">
+      <iframe [title]="data.title" [src]="videoUrl()"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen class="youtube-player">
       </iframe>
     </div>
+    }
   </div>
 </div>

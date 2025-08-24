@@ -1,0 +1,29 @@
+<mat-card class="media-card-item" [class.trailer-card]="media().trailer" (click)="navigateToDetails()" (keyPress)="navigateToDetails()"
+    [class.person-card]="media().media_type == 'person'">
+    <img [src]="getProfileImageUrl()" [alt]="media().title" (error)="media().subtitle.poster_path=null"
+        class="media-card-background-image">
+
+    @if (media().trailer) {
+    <mat-icon class="play-icon">play_circle_filled</mat-icon>
+    }
+
+    <div class="media-card-overlay"></div>
+
+    <mat-card-content class="media-card-content">
+        <mat-card-title class="media-card-title">{{ media().title}}</mat-card-title>
+        @if (media().media_type !== 'person' && media().subtitle.release_date) {
+        <mat-card-subtitle class="media-card-subtitle">
+            {{ media().subtitle.release_date | date:'MMM y' }}
+
+            @if(media().subtitle.vote_average) {
+            | {{ media().subtitle.vote_average | number: '1.1-1' }}
+            }
+        </mat-card-subtitle>
+        }
+        @if(media().media_type === 'person' && media().subtitle.known_for_department) {
+        <mat-card-subtitle class="media-card-subtitle">
+            {{ media().subtitle.known_for_department }}
+        </mat-card-subtitle>
+        }
+    </mat-card-content>
+</mat-card>

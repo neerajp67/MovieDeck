@@ -1,68 +1,56 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Subject, Observable, switchMap, of, map, catchError, forkJoin, takeUntil, Subscription, fromEvent } from 'rxjs';
-import { TmdbResponse, Movie, TrailerCategory, TrailerItem } from '../../../models/tmdb.model';
+import { Subject, Observable, switchMap, of, map, catchError, forkJoin, takeUntil } from 'rxjs';
+import { TmdbResponse, Movie, TrailerCategory, MediaCard } from '../../../models/tmdb.model';
 import { TmdbApiService } from '../../../services/api/tmdb-api.service';
 import { MatCardModule } from '@angular/material/card';
 import { TrailerPlayerService } from '../../../services/utils/trailer-player.service';
+import { HorizontalScrollComponent } from "../../shared/horizontal-scroll/horizontal-scroll.component";
+import { FormsModule } from '@angular/forms';
+import { MediaCardComponent } from "../../shared/media-card/media-card.component";
 
 @Component({
   selector: 'app-trailers',
   imports: [
-    CommonModule,
+    FormsModule,
     MatButtonToggleModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatCardModule
+    MatCardModule,
+    HorizontalScrollComponent,
+    MediaCardComponent
   ],
   templateUrl: './trailers.component.html',
   styleUrl: './trailers.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrailersComponent implements OnInit, OnDestroy {
-  @ViewChild('scrollContainer') scrollContainer!: ElementRef<HTMLDivElement>;
+  movieService = inject(TmdbApiService);
+  trailerPlayerService = inject(TrailerPlayerService);
 
-  trailers: TrailerItem[] = [];
-  isLoading: boolean = true;
-  errorMessage: string | null = null;
-  selectedCategory: TrailerCategory = 'movie';
-
-  showArrows: boolean = false;
-  canScrollLeft: boolean = false;
-  canScrollRight: boolean = false;
-
-  private isDragging = false;
-  private startX = 0;
-  private currentScrollLeftPosition = 0;
-
-  private mouseMoveSubscription: Subscription | null = null;
-  private mouseUpSubscription: Subscription | null = null;
+  trailers = signal<MediaCard[]>([]);
+  isLoading = signal<boolean>(true);
+  errorMessage = signal<string | null>(null);
+  selectedCategory = signal<TrailerCategory>('movie');
 
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private movieService: TmdbApiService,
-    private cdr: ChangeDetectorRef,
-    private trailerPlayerService: TrailerPlayerService
-  ) { }
 
   ngOnInit(): void {
     this.loadTrailers();
   }
 
   loadTrailers(): void {
-    this.isLoading = true;
-    this.errorMessage = null;
-    this.trailers = [];
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+    this.trailers.set([]);
 
     let mediaObservable: Observable<TmdbResponse<Movie>>;
 
-    if (this.selectedCategory === 'movie') {
+    if (this.selectedCategory() === 'movie') {
       mediaObservable = this.movieService.getNowPlayingMovies(1, 'IN');
-    } else if (this.selectedCategory === 'tv') {
+    } else if (this.selectedCategory() === 'tv') {
       mediaObservable = this.movieService.getAiringTodayTvShows(1);
     } else {
       mediaObservable = this.movieService.getUpcomming(1);
@@ -75,9 +63,9 @@ export class TrailersComponent implements OnInit, OnDestroy {
           return of([]);
         }
         const videoRequests = items.map(item =>
-          (this.selectedCategory === 'movie'
+          (this.selectedCategory() === 'movie'
             ? this.movieService.getMovieVideos(item.id)
-            : this.selectedCategory === 'tv'
+            : this.selectedCategory() === 'tv'
               ? this.movieService.getTvShowVideos(item.id)
               : this.movieService.getUpcommingVideos(item.id)
           ).pipe(
@@ -86,23 +74,42 @@ export class TrailersComponent implements OnInit, OnDestroy {
                 v => v.site === 'YouTube' && v.type === 'Trailer' && v.official
               ) || videoResponse.results.find(v => v.site === 'YouTube' && v.type === 'Trailer');
 
+              // return {
+              //   id: item.id,
+              //   title: (item as Movie).title || (item as Movie).name,
+              //   posterPath: item.backdrop_path || item.poster_path,
+              //   trailerKey: officialTrailer ? officialTrailer.key : null,
+              //   mediaType: this.selectedCategory(),
+              //   releaseDate: item?.release_date,
+              //   vote_average: item?.vote_average
+              // } as TrailerItem;
               return {
                 id: item.id,
-                title: (item as Movie).title || (item as Movie).name,
-                posterPath: item.backdrop_path || item.poster_path,
-                trailerKey: officialTrailer ? officialTrailer.key : null,
-                mediaType: this.selectedCategory,
-                releaseDate: item?.release_date
-              } as TrailerItem;
+                title: item.title || item.name,
+                subtitle: {
+                  poster_path: item.backdrop_path || item.poster_path,
+                  release_date: item?.release_date,
+                  vote_average: item?.vote_average,
+                },
+                trailer: {
+                  trailer_key: officialTrailer ? officialTrailer.key : null,
+                },
+                mediaType: this.selectedCategory(),
+              } as MediaCard;
             }),
             catchError(() => of({
               id: item.id,
               title: (item as Movie).title || (item as Movie).name,
-              posterPath: item.backdrop_path || item.poster_path,
-              trailerKey: null,
-              mediaType: this.selectedCategory,
-              releaseDate: item?.release_date
-            } as TrailerItem)
+              subtitle: {
+                poster_path: item.backdrop_path || item.poster_path,
+                release_date: item?.release_date,
+                vote_average: item?.vote_average,
+              },
+              trailer: {
+                trailer_key: '',
+              },
+              mediaType: this.selectedCategory()
+            })
             )
           )
         );
@@ -110,153 +117,44 @@ export class TrailersComponent implements OnInit, OnDestroy {
       }),
       takeUntil(this.destroy$)
     ).subscribe({
-      next: (mediaWithTrailers: TrailerItem[]) => {
-        this.trailers = mediaWithTrailers.filter(item => item.trailerKey);
-        this.isLoading = false;
-        if (this.trailers.length === 0) {
-          this.errorMessage = `No ${this.selectedCategory} trailers found.`;
+      next: (mediaWithTrailers: MediaCard[]) => {
+        this.trailers.set(mediaWithTrailers.filter(item => item?.trailer?.trailer_key));
+        this.isLoading.set(false);
+        if (this.trailers().length === 0) {
+          this.errorMessage.set(`No ${this.selectedCategory()} trailers found.`);
         }
-        requestAnimationFrame(() => {
-          this.updateScrollArrowVisibility();
-          if (this.trailers.length > 3) {
-            this.canScrollRight = true;
-          } else {
-            this.canScrollRight = false;
-          }
-          this.canScrollLeft = false;
-          this.cdr.detectChanges();
-        });
       },
       error: (err) => {
-        this.errorMessage = err.message || `Failed to load ${this.selectedCategory} trailers.`;
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.errorMessage.set(err.message || `Failed to load ${this.selectedCategory()} trailers.`);
+        this.isLoading.set(false);
       }
     });
-  }
-
-  selectCategory(category: TrailerCategory): void {
-    if (this.selectedCategory !== category) {
-      this.selectedCategory = category;
-      this.loadTrailers();
-    }
-  }
-
-  onMouseDown(event: MouseEvent): void {
-    if (!this.scrollContainer || event.button !== 0) return;
-
-    this.isDragging = true;
-    this.startX = event.pageX - this.scrollContainer.nativeElement.offsetLeft;
-    this.currentScrollLeftPosition = this.scrollContainer.nativeElement.scrollLeft;
-
-    this.cancelDragSubscriptions();
-
-    this.mouseUpSubscription = fromEvent(document, 'mouseup').subscribe(() => this.onMouseUp());
-    this.mouseMoveSubscription = fromEvent(document, 'mousemove').subscribe((e: Event) => this.onMouseMove(e as MouseEvent));
-
-    event.preventDefault();
-    this.scrollContainer.nativeElement.style.cursor = 'grabbing';
-  }
-
-  onMouseMove(event: MouseEvent): void {
-    if (!this.isDragging || !this.scrollContainer) return;
-
-    event.preventDefault();
-    const x = event.pageX - this.scrollContainer.nativeElement.offsetLeft;
-    const walk = (x - this.startX) * 1.5;
-    this.scrollContainer.nativeElement.scrollLeft = this.currentScrollLeftPosition - walk;
-    this.updateScrollArrowVisibility();
-  }
-
-  onMouseUp(): void {
-    this.isDragging = false;
-    if (this.scrollContainer) {
-      this.scrollContainer.nativeElement.style.cursor = 'grab';
-    }
-    this.cancelDragSubscriptions();
-  }
-
-  private cancelDragSubscriptions(): void {
-    if (this.mouseUpSubscription) {
-      this.mouseUpSubscription.unsubscribe();
-      this.mouseUpSubscription = null;
-    }
-    if (this.mouseMoveSubscription) {
-      this.mouseMoveSubscription.unsubscribe();
-      this.mouseMoveSubscription = null;
-    }
-  }
-
-  onScrollWrapperMouseEnter(): void {
-    this.showArrows = true;
-    this.updateScrollArrowVisibility();
-    this.cdr.detectChanges();
-  }
-
-  onScrollWrapperMouseLeave(): void {
-    this.showArrows = false;
-    this.cdr.detectChanges();
-  }
-
-  onScroll(): void {
-    this.updateScrollArrowVisibility();
-  }
-
-  private updateScrollArrowVisibility(): void {
-    if (!this.scrollContainer?.nativeElement) {
-      this.canScrollLeft = false;
-      this.canScrollRight = false;
-      this.cdr.detectChanges();
-      return;
-    }
-
-    const element = this.scrollContainer.nativeElement;
-    const scrollLeft = element.scrollLeft;
-    const scrollWidth = element.scrollWidth;
-    const clientWidth = element.clientWidth;
-
-    this.canScrollLeft = scrollLeft > 0;
-    this.canScrollRight = Math.ceil(scrollLeft + clientWidth) < scrollWidth;
-    this.cdr.detectChanges();
-  }
-
-  scrollContentLeft(): void {
-    if (this.scrollContainer) {
-      const scrollAmount = this.scrollContainer.nativeElement.clientWidth * 0.7;
-      this.scrollContainer.nativeElement.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-      setTimeout(() => this.updateScrollArrowVisibility(), 600);
-    }
-  }
-
-  scrollRight(): void {
-    if (this.scrollContainer) {
-      const scrollAmount = this.scrollContainer.nativeElement.clientWidth * 0.7;
-      this.scrollContainer.nativeElement.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-      setTimeout(() => this.updateScrollArrowVisibility(), 600);
-    }
   }
 
   getYouTubeThumbnail(key: string | null): string {
     return key ? `https://img.youtube.com/vi/${key}/mqdefault.jpg` : 'https://via.placeholder.com/320x180.png?text=No+Trailer';
   }
 
-  openTrailer(trailerItem: TrailerItem): void {
+  openTrailer(media: MediaCard): void {
     // Only open if a trailerKey is available
-    if (trailerItem?.trailerKey) {
+    if (media.trailer?.trailer_key) {
       this.trailerPlayerService.openTrailerModal({
-        title: trailerItem.title,
-        posterPath: trailerItem.posterPath,
-        trailerKey: trailerItem.trailerKey,
+        title: media.title,
+        posterPath: media.subtitle.poster_path || null,
+        trailerKey: media.trailer.trailer_key,
         isLoading: false,
         errorMessage: null
       });
     } else {
-      console.warn('No trailer key available for this item (should have been filtered out):', trailerItem.title);
+      console.warn('No trailer key available for this item (should have been filtered out):', media.title);
     }
   }
 
+  getMedia(media: MediaCard): MediaCard {
+    return media
+  }
+
   ngOnDestroy(): void {
-    this.cancelDragSubscriptions();
     this.destroy$.next();
     this.destroy$.complete();
   }

@@ -1,99 +1,140 @@
 <div class="detail-page-wrapper" [ngStyle]="{'background-image': getBackdropImageUrl()}">
 
   <div class="backdrop-overlay"></div>
-
-  <div *ngIf="isLoading" class="loading-indicator">
+  @if (isLoading()) {
+  <div class="loading-indicator">
     <mat-spinner diameter="60"></mat-spinner>
   </div>
+  }
 
-  <div *ngIf="errorMessage && !isLoading" class="error-message">
-    <p>{{ errorMessage }}</p>
+  @if (errorMessage() && !isLoading()) {
+  <div class="error-message">
+    <p>{{ errorMessage() }}</p>
     <button mat-stroked-button routerLink="/home">Go Home</button>
   </div>
+  }
 
-  <div *ngIf="mediaItem && !isLoading" class="detail-content-container">
+  @if (mediaItem() && !isLoading()) {
+  <div class="detail-content-container">
     <div class="poster-column">
-      <img [src]="movieService.getFullImageUrl(mediaItem.poster_path, 'w500')" [alt]="mediaItem.title || mediaItem.name"
-        class="detail-poster" (error)="mediaItem.poster_path = null">
+      <img [src]="movieService.getFullImageUrl(mediaItem()?.poster_path, 'w500')" [alt]="mediaItem()?.title || mediaItem()?.name"
+        class="detail-poster" (error)="mediaItem()?.poster_path">
     </div>
 
     <div class="info-column">
       <h1 class="title">
-        {{ mediaItem.title || mediaItem.name }}
-        <span class="release-year" *ngIf="mediaItem.release_date || mediaItem.release_date">
-          ({{ getYear(mediaItem.release_date || mediaItem.release_date) }})
+        {{ mediaItem()?.title || mediaItem()?.name }}
+        @if(mediaItem()?.release_date || mediaItem()?.first_air_date) {
+        <span class="release-year">
+          ({{ getYear(mediaItem()?.release_date || mediaItem()?.first_air_date) }})
         </span>
+        }
       </h1>
-
-      <p class="original-title" *ngIf="mediaItem.original_title && mediaItem.original_title !== mediaItem.title">
-        Original Title: {{ mediaItem.original_title }}
+      @if (mediaItem()?.original_title && mediaItem()?.original_title !== mediaItem()?.title) {
+      <p class="original-title">
+        Original Title: {{ mediaItem()?.original_title }}
       </p>
+      }
 
       <div class="metadata-line">
-        <span *ngIf="mediaType === 'movie' && mediaItem.release_date" class="release-date">
-          {{ mediaItem.release_date | date:'MM/dd/yyyy' }} ({{ mediaItem.original_language.toUpperCase() }})
+        @if (mediaType() === 'movie' && mediaItem()?.release_date) {
+        <span class="release-date">
+          {{ mediaItem()?.release_date | date:'MMM d y' }} ({{ mediaItem()?.original_language?.toUpperCase() }})
         </span>
-        <span *ngIf="mediaType === 'tv' && mediaItem.release_date" class="release-date">
-          {{ mediaItem.release_date | date:'MM/dd/yyyy' }} ({{ mediaItem.original_language.toUpperCase() }})
+        }
+        @if (mediaType() === 'tv' && mediaItem()?.first_air_date) {
+        <span class="release-date">
+          {{ mediaItem()?.first_air_date | date:'MMM d y' }} ({{ mediaItem()?.original_language?.toUpperCase() }})
         </span>
-        <span *ngIf="mediaItem.genres && mediaItem.genres.length > 0" class="genres">
+        }
+        @if ((mediaItem()?.genres ?? []).length > 0) {
+        <span class="genres">
           <mat-chip-set aria-label="Genres">
-            <mat-chip *ngFor="let genre of mediaItem.genres.slice(0, 3)" class="genre-chip" disabled>
+            @for (genre of mediaItem()?.genres?.slice(0, 3); track $index) {
+            <mat-chip class="genre-chip" disabled>
               {{ genre.name }}
             </mat-chip>
+            }
           </mat-chip-set>
         </span>
-        <span *ngIf="mediaItem.runtime" class="runtime">{{ mediaItem.runtime }} min</span>
-        <span *ngIf="mediaItem.status" class="status">{{ mediaItem.status }}</span>
+        }
+        @if (mediaItem()?.runtime) {
+        <span class="runtime">{{ mediaItem()?.runtime }} min</span>
+        }
+        @if (mediaItem()?.status) {
+        <span class="status">{{ mediaItem()?.status }}</span>
+        }
       </div>
 
-      <div class="crew-section" *ngIf="credits">
-        <span class="crew-item" *ngIf="getDirectors().length > 0">
+      @if (credits()) {
+      <div class="crew-section">
+        @if (getDirectors().length > 0) {
+        <span class="crew-item">
           <h4>Directed by</h4>
-          <span *ngFor="let director of getDirectors(); let last = last">
-            {{ director.name }}{{ !last ? ', ' : '' }}
-          </span>
+
+          @for (director of getDirectors(); track $index; let last = $last) {
+          {{ director.name }}{{ !last ? ', ' : '' }}
+          }
         </span>
-        <span class="crew-item" *ngIf="getCreators().length > 0">
-          <h4>{{ mediaType === 'movie' ? 'Written by' : 'Created by' }}</h4>
-          <span *ngFor="let creator of getCreators(); let last = last">
-            {{ creator.name }}{{ !last ? ', ' : '' }}
-          </span>
+        }
+        @if (getCreators().length > 0) {
+        <span class="crew-item">
+          <h4>{{ mediaType() === 'movie' ? 'Written by' : 'Created by' }}</h4>
+          @for (creator of getCreators(); track $index; let last = $last) {
+          {{ creator.name }}{{ !last ? ', ' : '' }}
+          }
         </span>
+        }
       </div>
+      }
 
       <div class="actions-and-score">
-        <div class="user-score" *ngIf="mediaItem.vote_average">
-          <span class="score-value">{{ mediaItem.vote_average | number:'1.1-1' }} / 10</span>
-          <span class="score-label">TMDb Score ({{ mediaItem.vote_count | number }} votes)</span>
+        @if (mediaItem()?.vote_average) {
+        <div class="user-score">
+          <span class="score-value">{{ mediaItem()?.vote_average | number:'1.1-1' }} / 10</span>
+          <span class="score-label">TMDb Score ({{ mediaItem()?.vote_count | number }} votes)</span>
         </div>
+        }
         <div class="action-buttons">
-          <button *ngIf="mediaItem.homepage" mat-icon-button aria-label="Homepage" matTooltip="Visit Homepage"
-            (click)="openHomepage(mediaItem.homepage)">
+          @if (mediaItem()?.homepage) {
+          <button mat-icon-button aria-label="Homepage" matTooltip="Visit Homepage"
+            (click)="openHomepage(mediaItem()?.homepage)">
             <mat-icon>home</mat-icon>
           </button>
-          <button [class.disabled]="!mainTrailer?.trailerKey" mat-flat-button class="play-trailer-button"
-            (click)="openTrailer(mainTrailer)" [title]="!mainTrailer?.trailerKey ? 'No trailer available' : ''">
+          }
+          <button [class.disabled]="!mainTrailer()?.trailerKey" mat-flat-button class="play-trailer-button"
+            (click)="openTrailer(mainTrailer())" [title]="!mainTrailer()?.trailerKey ? 'No trailer available' : ''">
             <mat-icon>play_arrow</mat-icon> Play Trailer
           </button>
         </div>
       </div>
 
-      <p class="tagline" *ngIf="mediaItem.tagline">{{ mediaItem.tagline }}</p>
+      @if (mediaItem()?.tagline) {
+      <p class="tagline">{{ mediaItem()?.tagline }}</p>
+      }
 
-      <div class="overview-section" *ngIf="mediaItem.overview">
+      @if (mediaItem()?.overview) {
+      <div class="overview-section">
         <h3>Overview</h3>
-        <p>{{ mediaItem.overview }}</p>
+        <p>{{ mediaItem()?.overview }}</p>
       </div>
+      }
 
-      <div class="budget-revenue-section" *ngIf="mediaType === 'movie' && (mediaItem.budget || mediaItem.revenue)">
+      @if (mediaType() === 'movie' && (mediaItem()?.budget || mediaItem()?.revenue)) {
+      <div class="budget-revenue-section">
         <h3>Financials</h3>
-        <p *ngIf="mediaItem.budget">Budget: {{ mediaItem.budget | currency:'USD' }}</p>
-        <p *ngIf="mediaItem.revenue">Revenue: {{ mediaItem.revenue | currency:'USD' }}</p>
+        @if (mediaItem()?.budget) {
+        <p>Budget: {{ mediaItem()?.budget | currency:'USD' }}</p>
+        }
+        @if (mediaItem()?.revenue) {
+        <p>Revenue: {{ mediaItem()?.revenue | currency:'USD' }}</p>
+        }
       </div>
+      }
     </div>
   </div>
+  }
 </div>
 
-<app-media-cast [cast]="credits?.cast || []"></app-media-cast>
-<app-media-similar [similarItems]="similarItems" [mediaType]="mediaType"></app-media-similar>
+<app-media-cast [cast]="credits()?.cast || []"></app-media-cast>
+<app-media-similar [similarItems]="similarItems()" [mediaType]="mediaType()"></app-media-similar>

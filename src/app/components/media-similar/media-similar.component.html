@@ -1,40 +1,18 @@
-<div class="content-section">
+<section class="content-section">
   <div class="content-header">
     <h2>You might also like</h2>
   </div>
 
-  <div class="scroll-wrapper" (mouseenter)="onScrollWrapperMouseEnter()" (mouseleave)="onScrollWrapperMouseLeave()"
-    *ngIf="similarItems && similarItems.length > 0">
-
-    <button mat-icon-button class="scroll-arrow left-arrow" *ngIf="showArrows && canScrollLeft"
-      (click)="scrollContentLeft()">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-
-    <div class="horizontal-scroll-container" (scroll)="onScroll()" #scrollContainer>
-      <div class="scrollable-content" (mousedown)="onMouseDown($event)" (mousemove)="onMouseMove($event)"
-        (mouseup)="onMouseUp()" (mouseleave)="onMouseLeave()">
-        <mat-card *ngFor="let item of similarItems" class="media-card-item" (click)="navigateToDetails(item.id)">
-          <img [src]="movieService.getFullImageUrl(item.poster_path, 'w300')" [alt]="item.title || item.name"
-            class="media-card-background-image" (error)="item.poster_path=null">
-          <div class="media-card-overlay"></div>
-          <mat-card-content class="media-card-content">
-            <mat-card-title class="media-card-title">{{ item.title || item.name }}</mat-card-title>
-            <mat-card-subtitle *ngIf="item.release_date || item.first_air_date" class="media-card-subtitle">
-              {{ (item.release_date || item.first_air_date) | date:'MMM dd, y' }}
-            </mat-card-subtitle>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div>
-
-    <button mat-icon-button class="scroll-arrow right-arrow" *ngIf="showArrows && canScrollRight"
-      (click)="scrollContentRight()">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
-  </div>
-
-  <div *ngIf="!similarItems || similarItems.length === 0" class="info-message">
+  @if (similarItems() && similarItems().length > 0) {
+  <app-horizontal-scroll>
+    @for (item of similarItems(); track $index) {
+    <app-media-card [media]="getMedia(item)"></app-media-card>
+    }
+  </app-horizontal-scroll>
+  } @else {
+  <div class="info-message">
     <p>No similar items found.</p>
   </div>
-</div>
+  }
+
+</section>

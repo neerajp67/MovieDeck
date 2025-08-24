@@ -1,13 +1,11 @@
 <section class="hero-section-container">
   <div id="background" class="background">
-    <ng-container *ngIf="movies && movies.length > 0 && currentMovie">
-      <div class="image-slideshow-wrapper">
-        <img
-          [src]="movieService.getFullImageUrl(currentMovie.backdrop_path, 'backdrop')"
-          [alt]="currentMovie.title"
-          [class.fade-in]="isImageFading"  class="hero-background-image"   />
-      </div>
-    </ng-container>
+    @if (movies() && movies().length > 0 && currentMovie()) {
+    <div class="image-slideshow-wrapper">
+      <img [src]="movieService.getFullImageUrl(currentMovie()?.backdrop_path, 'backdrop')" [alt]="currentMovie()?.title"
+        [class.fade-in]="isImageFading()" class="hero-background-image" />
+    </div>
+    }
 
     <div class="background-overlay"></div>
   </div>
@@ -15,51 +13,48 @@
   <div id="foreground" class="foreground">
     <div class="foreground-sub">
       <div class="details-container">
-        <ng-container *ngIf="currentMovie">
-          <h1 class="mat-display-2 fade-in-up">{{ currentMovie.title }}</h1>
-          <p class="mat-body-1 fade-in-up delay-1">
-            {{ currentMovie.release_date | date: 'yyyy' }}
-            <span *ngIf="currentMovie.vote_average">
-              | {{ (currentMovie.vote_average * 10) | number: '1.0-0' }}% Match
-            </span>
-          </p>
-          <p class="mat-body-2 fade-in-up delay-2 genres">
-            <span *ngFor="let genreId of currentMovie.genre_ids; let last = last">
-              {{ getGenreName(genreId) }}{{ !last ? ' | ' : '' }}
-            </span>
-          </p>
-          <p class="mat-body-1 overview fade-in-up delay-3">{{ currentMovie.overview }}</p>
+        @if (currentMovie()) {
+        <h1 class="mat-display-2 fade-in-up">{{ currentMovie()?.title }}</h1>
+        <p class="mat-body-1 fade-in-up delay-1">
+          {{ currentMovie()?.release_date | date: 'MMM y' }}
+          @if(currentMovie()?.vote_average) {
+          <span>
+            | {{ currentMovie()?.vote_average | number: '1.1-1' }} / 10
+          </span>
+          }
+        </p>
+        <p class="mat-body-2 fade-in-up delay-2 genres">
+          @for (genreId of currentMovie()?.genre_ids; track $index;let last = $last) {
+          <span>
+            {{ getGenreName(genreId) }}{{ !last ? ' | ' : '' }}
+          </span>
+          }
+        </p>
+        <p class="mat-body-1 overview fade-in-up delay-3">{{ currentMovie()?.overview }}</p>
 
-          <button mat-flat-button color="primary" class="button-big fade-in-up delay-4"
-                  [attr.aria-label]="'View details for ' + currentMovie.title"
-                  (click)="viewDetails(currentMovie.id)">
-            <mat-icon>info</mat-icon> View Details
-          </button>
-        </ng-container>
+        <button mat-flat-button color="primary" class="button-big fade-in-up delay-4"
+          [attr.aria-label]="'View details for ' + currentMovie()?.title" (click)="viewDetails(currentMovie()?.id)">
+          <mat-icon>info</mat-icon> View Details
+        </button>
+        }
       </div>
     </div>
 
     <div class="navigation-arrows">
-      <button mat-icon-button (click)="prevSlide()" class="arrow left-arrow"
-              aria-label="Previous movie">
+      <button mat-icon-button (click)="prevSlide()" class="arrow left-arrow" aria-label="Previous movie">
         <mat-icon>chevron_left</mat-icon>
       </button>
-      <button mat-icon-button (click)="nextSlide()" class="arrow right-arrow"
-              aria-label="Next movie">
+      <button mat-icon-button (click)="nextSlide()" class="arrow right-arrow" aria-label="Next movie">
         <mat-icon>chevron_right</mat-icon>
       </button>
     </div>
 
     <div class="mobile-navigation-dots" role="tablist">
-      <span
-        *ngFor="let movie of movies; let i = index"
-        [class.active]="i === currentSlideIndex"
-        (click)="selectSlide(i)"
-        [attr.aria-label]="'Go to movie ' + (i + 1)"
-        [attr.aria-selected]="i === currentSlideIndex"
-        role="tab"
-        [attr.tabindex]="i === currentSlideIndex ? 0 : -1"
-      ></span>
+      @for(movie of movies(); track $index;let i = $index) {
+      <span [class.active]="i === currentSlideIndex()" (click)="selectSlide(i)"
+        [attr.aria-label]="'Go to movie ' + (i + 1)" [attr.aria-selected]="i === currentSlideIndex()" role="tab"
+        [attr.tabindex]="i === currentSlideIndex() ? 0 : -1"></span>
+      }
     </div>
   </div>
 </section>

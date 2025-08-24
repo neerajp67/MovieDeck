@@ -1,7 +1,7 @@
 <section class="content-section">
   <div class="content-header">
-    <h2>Latest Trailers</h2>
-    <mat-button-toggle-group [value]="selectedCategory" (change)="selectCategory($event.value)"
+    <h2>Trailers</h2>
+    <mat-button-toggle-group [(ngModel)]="selectedCategory" (change)="loadTrailers()"
       aria-label="Select trailer category">
       <mat-button-toggle value="movie">Movies</mat-button-toggle>
       <mat-button-toggle value="tv">TV Shows</mat-button-toggle>
@@ -9,48 +9,29 @@
     </mat-button-toggle-group>
   </div>
 
-  <div *ngIf="isLoading" class="info-message">
+  @if (isLoading()) {
+  <div class="info-message">
     <mat-spinner diameter="50"></mat-spinner>
   </div>
+  }
 
-  <div *ngIf="errorMessage && !isLoading" class="info-message error-message">
-    <p>{{ errorMessage }}</p>
+  @if (errorMessage() && !isLoading()) {
+  <div class="info-message error-message">
+    <p>{{ errorMessage() }}</p>
   </div>
+  }
 
-  <div *ngIf="!isLoading && !errorMessage && trailers.length === 0" class="info-message">
+  @if (!isLoading() && !errorMessage() && trailers().length === 0) {
+  <div class="info-message">
     <p>No trailers found for this selection.</p>
   </div>
+  }
 
-  <div class="scroll-wrapper" (mouseenter)="onScrollWrapperMouseEnter()" (mouseleave)="onScrollWrapperMouseLeave()"
-    *ngIf="!isLoading && trailers.length > 0">
-
-    <button mat-icon-button class="scroll-arrow left-arrow" *ngIf="showArrows && canScrollLeft"
-      (click)="scrollContentLeft()">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-
-    <div class="horizontal-scroll-container" (scroll)="onScroll()" #scrollContainer>
-      <div class="scrollable-content" (mousedown)="onMouseDown($event)">
-        <mat-card *ngFor="let trailer of trailers" class="media-card-item" (click)="openTrailer(trailer)">
-          <img [src]="getYouTubeThumbnail(trailer.trailerKey)" [alt]="trailer.title + ' trailer thumbnail'"
-            class="media-card-background-image">
-          <mat-icon class="play-icon">play_circle_filled</mat-icon>
-          
-          <div class="media-card-overlay"></div>
-
-          <mat-card-content class="media-card-content">
-            <mat-card-title class="media-card-title">{{ trailer.title }}</mat-card-title>
-            <mat-card-subtitle *ngIf="trailer.releaseDate" class="media-card-subtitle">
-              {{ trailer.releaseDate | date:'MMM d, y' }}
-            </mat-card-subtitle>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div>
-
-    <button mat-icon-button class="scroll-arrow right-arrow" *ngIf="showArrows && canScrollRight"
-      (click)="scrollRight()">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
-  </div>
+  @if (!isLoading() && trailers().length > 0) {
+  <app-horizontal-scroll>
+    @for (media of trailers(); track $index) {
+    <app-media-card [media]="getMedia(media)"></app-media-card>
+    }
+  </app-horizontal-scroll>
+  }
 </section>
